@@ -80,7 +80,7 @@ All seven must-haves, and all seven bonus items except one that needs a person
 | Streaming chat | NDJSON over `fetch`, Stop, send-while-streaming, `conversation_id` carried forward |
 | Renderer | the nine catalog blocks, validated one by one; unknown skipped, invalid isolated |
 | Confirmation | one state machine, exactly-once, server clock, supersede, reconcile |
-| Shell | an account rail (user, address, wallet), a start screen, the cart and orders panel, all fed by REST and refreshed after every action |
+| Shell | an account rail (user with the raw account flags behind the gates, address, wallet), a start screen, the cart and orders panel, all fed by REST and refreshed after every action; on a phone, a top bar and sheets |
 | Safe content | markdown without HTML, link allowlist, no images; every other field is text |
 | Audit inspector | drawer with audit record, stream phase and every validation failure |
 | Tests | the eleven behaviours the brief lists, each pinned |
@@ -418,10 +418,30 @@ are untouched.
 
 **Layout stability.** The scrollbar gutter is reserved, the status line and
 the checkout card's right column have fixed heights, non-text blocks arrive
-whole, and the transcript follows the stream only while the user is at the
-bottom. The checkout card lays itself out by its own width (a container
-query), so it holds together in the workbench's narrow column as well as in
-the transcript.
+whole, rows of restaurant cards hide their scrollbar (its appearance would
+change the row's height) and move with Previous/Next buttons instead, and the
+transcript follows the stream only while the user is at the bottom. The
+checkout card lays itself out by its own width (a container query), so it
+holds together in the workbench's narrow column and on a phone as well as in
+the transcript. Everything that loads from the server has a skeleton of the
+size it will have, so the page does not jump when data arrives. An e2e test
+pins all of this: while the longest answer the mock has streams in, the
+composer, the rail, the panel and every earlier turn keep their exact
+position and size, and the browser's own cumulative layout shift stays under
+0.1, the "good" threshold.
+
+**Small screens.** Below 1024px the frame becomes one column that fills the
+screen exactly: a top bar with a menu button and a cart button, the rail and
+the panel as sheets (native `<dialog>`: focus trap, Escape and backdrop for
+free), the checkout card in one column, the composer at the bottom. The same
+components, the same store; only the frame changes.
+
+**Focus.** The composer's focus ring is drawn on the whole pill rather than
+inside the text area, so a pointer click and the keyboard light the same
+shape and no box appears inside the rounded control; every other control
+keeps the 3px outline on `:focus-visible`. Hover pairs are consistent:
+outlined controls tint, filled controls deepen, a filled control never takes a
+light background that would hide its text.
 
 ## Audit inspector, and what the product UI shows
 
@@ -495,10 +515,11 @@ wins, even backwards), the link allowlist, hostile markdown rendered in a
 DOM, resuming, new conversations, the help-center classifier and Turkish
 folding.
 
-`npm run e2e`: 36 Playwright tests: all 24 rows of the scenario table against
-the unmodified mock, the bonus features, and a layout check at two desktop
-widths (no horizontal overflow, every region inside the viewport, before and
-after a streamed answer). Rows with ledger assertions end by running
+`npm run e2e`: 38 Playwright tests: all 24 rows of the scenario table against
+the unmodified mock, the bonus features, and the layout: the frame at two
+desktop widths (no horizontal overflow, every region inside the viewport, the
+select with room for its chevron), the stability of everything on screen while
+an answer streams, and the phone layout with its sheets. Rows with ledger assertions end by running
 `scripts/check-ledger.mjs <id>` and requiring exit code 0: the same script,
 and so the same assertions, the reviewers run. Elements are found by role and
 accessible name, which makes the suite a check on the accessibility tree too.
@@ -532,9 +553,12 @@ in the suite.
   (`pol_security` contains an embedded "system note").
 - **Workbench** (`/workbench.html`): every fixture through the real
   `parseBlock` and the real components, every confirmation state, every
-  response phase. A separate Vite entry: no router needed, and not in the
-  production bundle. It is where the four states are checked side by side,
-  and it caught the checkout card collapsing in a narrow column.
+  response phase, each in its own frame with a title in plain words, when it
+  happens, and the technical name small on the side, so that someone outside
+  engineering can read it. A separate Vite entry: no router needed, and not in
+  the production bundle. Nothing in it is hand-written markup. It is where the
+  four states are checked side by side, and it caught the checkout card
+  collapsing in a narrow column.
 - **Performance note**: below.
 
 ### Performance note
@@ -700,9 +724,8 @@ something I can defend line by line.
   server needs inline scripts.
 - **The superseded-token gap** above: a status pre-check before execute when a
   later response for the same action ended unfinished.
-- **Small screens.** Under 1100px the rail moves to the top and the cart and
-  orders panel is hidden; it should become a tab. The brief reviews on a
-  desktop.
+- **Small screens, further.** The phone layout works; a swipe to open the
+  sheets and a bottom tab bar would make it feel native.
 - **Validation failures to a real sink** (they are a signal about the model),
   not the console.
 - **Cross-browser E2E in CI** (Firefox, WebKit); today the suite runs in

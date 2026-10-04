@@ -39,6 +39,19 @@ Durum: 4 Ekim akşamı. A, B ve C tamamlandı; D ve E kullanıcıda.
 - [x] C10 Beceriler: `/scenario`, `/add-block`, `/ship-check`. (Kişisel `/defend` yazılmadı; istenirse `~/.claude/skills/` altına.)
 - [x] C11 `docs/architecture-plan.md` 4 Ekim notu.
 
+## F. 5 Ekim geri bildirimleri
+
+- [x] F1 Workbench: her örnek kendi çerçevesinde, düz dilde başlık ve "ne zaman olur" açıklaması, teknik ad küçük; bölüm menüsü.
+- [x] F2 Yardım merkezi yeni tasarımda: hap biçimli arama, kartlar, düğme görünümlü geri bağlantısı, iskeletler.
+- [x] F3 Vurgu renkleri tutarlı: çerçeveli kontroller açılır, dolu kontroller koyulaşır; siyah menü ögesi açık zemine düşmez.
+- [x] F4 Yazma kutusunda odak halkası kutunun kendisine değil hap biçimli çerçeveye.
+- [x] F5 Kullanıcı seçiminde ad · kimlik; altında ham bayraklar (payment_method, age_verified, district).
+- [x] F6 İskeletler: ana sayfa restoranları ve son sipariş, sepet, siparişler, yardım merkezi sonuçları ve doküman sayfası, kenar çubuğu adres/cüzdan.
+- [x] F7 Kaydırıcıda önceki/sonraki okları; kaydırma çubuğu gizli (yüksekliği değiştirmesin).
+- [x] F8 Düzen kararlılığı: akış sırasında çerçeve ve önceki turlar kıpırdamıyor, tarayıcı kayma ölçüsü 0,1'in altında; uçtan uca testle sabit.
+- [x] F9 Telefon düzeni: üst çubuk, çekmece olarak kenar menüsü ve sepet, tek sütun ödeme fişi; sayfa ekranı tam dolduruyor.
+- [x] F10 Seçim kutusu kendi okunu çiziyor (`appearance: none`), yerleşik ok kenara yapışmıyor.
+
 ## D. Kullanıcının yapacakları
 
 - [ ] D1 VoiceOver çalıştırması: `docs/screen-reader-run.md` içindeki "Heard" sütunu.
