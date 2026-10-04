@@ -40,8 +40,8 @@ export function DocDialog({ docId, onClose }: { docId: string | null; onClose: (
       {query.data && <DocView doc={query.data} />}
       {query.data && (
         <p className={styles.more}>
-          <Link to={`/help/${encodeURIComponent(query.data.id)}`} onClick={onClose}>
-            Open in the help center
+          <Link to={`/help/${encodeURIComponent(query.data.id)}`} className="button" onClick={onClose}>
+            Open in the help center <Icon name="right" size={15} />
           </Link>
         </p>
       )}
