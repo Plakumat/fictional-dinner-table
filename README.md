@@ -30,7 +30,8 @@ the alternatives turned down, are in
 
 ## Run it
 
-Node ≥ 20. Two terminals:
+Node 22 (22.12 or later: Vitest 5 needs it; `client/.nvmrc` says `22`, and
+`nvm use` picks it up). The mock itself runs on Node ≥ 20. Two terminals:
 
 ```bash
 npm start                                   # the mock, http://localhost:4000
