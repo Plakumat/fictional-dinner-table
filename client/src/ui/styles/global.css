@@ -265,6 +265,9 @@ textarea {
 .drawer {
   position: fixed;
   inset: 0 auto 0 0;
+  /* A dialog is as wide as its content by default; the content changes while
+     data loads, so the width is fixed instead. */
+  width: min(360px, 88vw);
   max-width: min(360px, 88vw);
   max-height: 100vh;
   height: 100vh;

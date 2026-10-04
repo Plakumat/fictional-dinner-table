@@ -12,6 +12,15 @@ interface Props {
   onToggleInspector: () => void;
 }
 
+/** One account flag; a small skeleton stands in for the value while it loads. */
+function Fact({ name, value }: { name: string; value: string | undefined }) {
+  return (
+    <span>
+      {name}: {value ?? <Skeleton width={36} height={9} radius={4} style={{ display: 'inline-block', verticalAlign: 'middle' }} />}
+    </span>
+  );
+}
+
 /**
  * The left rail: where you are, who you are, where food goes, how much is in
  * the wallet. Everything in it is read from the REST API; the wallet is
@@ -49,16 +58,19 @@ export function Sidebar({ inspectorOpen, onToggleInspector }: Props) {
       <div className={styles.sideCards}>
         <div className={styles.sideCard} aria-busy={profile.isPending}>
           <span className={styles.label}>Deliver to</span>
-          {profile.data ? (
-            <span className={styles.strong}>{profile.data.address ?? profile.data.district ?? '—'}</span>
-          ) : profile.isError ? (
-            <span className={styles.strong}>Address unavailable</span>
-          ) : (
-            <>
-              <Skeleton width="75%" height={18} />
-              <LoadingNote what="address" />
-            </>
-          )}
+          {/* One line tall in every state, so switching user does not move the rail. */}
+          <span className={styles.strong}>
+            {profile.data ? (
+              (profile.data.address ?? profile.data.district ?? '—')
+            ) : profile.isError ? (
+              'Address unavailable'
+            ) : (
+              <>
+                <Skeleton width="75%" height={14} style={{ marginTop: 4 }} />
+                <LoadingNote what="address" />
+              </>
+            )}
+          </span>
           <span className={styles.activeNote}>
             {active > 0 && (
               <>
@@ -84,17 +96,12 @@ export function Sidebar({ inspectorOpen, onToggleInspector }: Props) {
               <option value={userId}>{userId}</option>
             )}
           </select>
-          {/* The raw flags behind the gates, as the server sends them. */}
-          <p className={styles.facts} aria-label="Account flags">
-            {profile.data ? (
-              <>
-                <span>payment_method: {String(profile.data.payment_method ?? '—')}</span>
-                <span>age_verified: {String(profile.data.age_verified ?? '—')}</span>
-                <span>district: {profile.data.district ?? '—'}</span>
-              </>
-            ) : (
-              <Skeleton width="90%" height={11} />
-            )}
+          {/* The raw flags behind the gates, as the server sends them. Three lines
+              in every state: the names stay, only the values load. */}
+          <p className={styles.facts} aria-label="Account flags" aria-busy={profile.isPending}>
+            <Fact name="payment_method" value={profile.data ? String(profile.data.payment_method ?? '—') : profile.isError ? '—' : undefined} />
+            <Fact name="age_verified" value={profile.data ? String(profile.data.age_verified ?? '—') : profile.isError ? '—' : undefined} />
+            <Fact name="district" value={profile.data ? (profile.data.district ?? '—') : profile.isError ? '—' : undefined} />
           </p>
           <div className={styles.wallet} aria-live="polite">
             <span className={styles.label}>Wallet</span>
