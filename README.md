@@ -483,12 +483,13 @@ wins, even backwards), the link allowlist, hostile markdown rendered in a
 DOM, resuming, new conversations, the help-center classifier and Turkish
 folding.
 
-`npm run e2e`: 42 Playwright tests: all 24 rows of the scenario table against
+`npm run e2e`: 43 Playwright tests: all 24 rows of the scenario table against
 the unmodified mock, the bonus features, the order notes that arrive over
 REST, and the layout: the frame at two desktop widths (no horizontal
 overflow, every region inside the viewport, the select with room for its
 chevron), the stability of everything on screen while an answer streams and
-while a user switches, and the phone layout with its sheets. Rows with ledger assertions end by running
+while a user switches, a long conversation that never gives the page itself a
+scrollbar, and the phone layout with its sheets. Rows with ledger assertions end by running
 `scripts/check-ledger.mjs <id>` and requiring exit code 0: the same script,
 and so the same assertions, the reviewers run. Elements are found by role and
 accessible name, which makes the suite a check on the accessibility tree too.
@@ -519,14 +520,39 @@ accessible name, which makes the suite a check on the accessibility tree too.
   server's order with the first marked primary. One opens the document in a
   native `<dialog>` with its trust labels. Document bodies are rendered as text
   (`pol_security` contains an embedded "system note").
-- **Workbench** (`/workbench.html`): every fixture through the real
-  `parseBlock` and the real components, every confirmation state, every
-  response phase, each in its own frame with a title in plain words, when it
-  happens, and the technical name small on the side, so that someone outside
-  engineering can read it. A separate Vite entry: no router needed, and not in
-  the production bundle. Nothing in it is hand-written markup. It is where the
-  four states are checked side by side.
+- **Workbench**: below.
 - **Performance note**: below.
+
+### Workbench
+
+`http://localhost:5173/workbench.html`, no backend needed.
+
+![The workbench: the four states side by side, then every confirmation state, every card with its valid, invalid and unknown examples, and every answer phase](docs/screenshots/workbench.png)
+
+Every card the assistant can send, in every state it can be in, on one page:
+
+- **The four states that must never be confused**, side by side: blocked,
+  waiting for you, done, error. This is the row the brief's clearest test is
+  checked against, at a glance, without typing a prompt.
+- **The confirmation card, state by state**: live, held while an answer
+  streams, confirming, confirmed, expired, replaced, rejected, reconciling,
+  unresolved, void — thirteen states, plus the destructive and the tip
+  variants. Most of them are hard to reach on purpose in the live app (a lost
+  response, an unreachable status endpoint); here they are always visible.
+- **Every card** with its examples: a valid one, an invalid one (what the
+  user sees instead, and why, in small print) and, for the unknown type, the
+  nothing that is drawn.
+- **Every answer phase**: connecting, streaming, complete, stopped,
+  incomplete, failed and retryable, failed for good, rate-limited,
+  unsupported version.
+
+Nothing in it is hand-written markup. The examples are the same 37 fixtures
+the contract test judges with Ajv and Zod, fed through the real `parseBlock`
+and the real components, with the server clock frozen; a change to a schema or
+a component shows up here before it shows up in a scenario. Each example sits
+in a frame with a title in plain words, when it happens, and the technical
+name small on the side, so that someone outside engineering can read it. It
+is a separate Vite entry: no router, nothing of it in the production bundle.
 
 ### Performance note
 

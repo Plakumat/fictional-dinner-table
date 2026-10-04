@@ -7,6 +7,9 @@
 }
 
 .scroll {
+  /* Positioned, so that the screen-reader-only elements in the turns are
+     placed inside this box and scroll with it, instead of stretching the page. */
+  position: relative;
   overflow-y: auto;
   /* The scrollbar's space is always reserved: it appearing mid-stream would shift every line. */
   scrollbar-gutter: stable;
