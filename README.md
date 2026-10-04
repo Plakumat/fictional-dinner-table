@@ -563,11 +563,11 @@ Measured with `vite build` (minified / gzip):
 | React + React DOM | 211 kB | 66 kB |
 | react-markdown and its parser | 113 kB | 34 kB |
 | Zod | 87 kB | 25 kB |
-| application code (incl. icons) | ~70 kB | ~22 kB |
+| application code (incl. icons) | ~80 kB | ~24 kB |
 | TanStack Query | 41 kB | 13 kB |
 | React Router | 38 kB | 14 kB |
-| **total, first load** | **565 kB** | **174 kB** |
-| help center (lazy) | 5 kB | 2 kB |
+| **total, first load** | **575 kB** | **176 kB** |
+| help center (lazy) | 6 kB | 2 kB |
 
 - *Streaming cost.* The store is updated once per network chunk, not once per
   event. A block that did not change keeps its object identity, and both
