@@ -122,6 +122,61 @@ test('nothing already on screen moves while an answer streams in', async ({ page
   expect(clsDuring).toBeLessThan(0.1);
 });
 
+/** The rail's own anchors: if a card above changes height, the button below it moves. */
+const railAnchors = (page: Page) =>
+  page.evaluate(() => {
+    const rect = (el: Element | null) => {
+      const r = el?.getBoundingClientRect();
+      return r ? [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)] : null;
+    };
+    const rail = document.querySelector('[aria-label="Account"]');
+    return {
+      rail: rect(rail),
+      select: rect(document.getElementById('user-select')),
+      flags: rect(document.querySelector('[aria-label="Account flags"]')),
+      inspectorButton: rect([...(rail?.querySelectorAll('button') ?? [])].find((b) => b.textContent?.includes('Audit inspector')) ?? null),
+      sheet: rect(document.querySelector('dialog[open]')),
+    };
+  });
+
+/** Switch to another user while their profile is held back, and measure during and after the load. */
+async function switchUserAndMeasure(page: Page, userId: string, wallet: string) {
+  await page.route(`**/api/users/${userId}`, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    await route.continue();
+  });
+  const before = await railAnchors(page);
+  await page.getByLabel('User').selectOption(userId);
+  await page.waitForTimeout(150);
+  const during = await railAnchors(page);
+  await expect(page.getByRole('complementary', { name: 'Account' })).toContainText(wallet);
+  await page.waitForTimeout(150);
+  const after = await railAnchors(page);
+  return { before, during, after };
+}
+
+test('switching user does not move the rail, while the profile loads or after', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/?user=u_ok');
+  await expect(page.getByRole('complementary', { name: 'Account' }).getByText(/^₺/)).toBeVisible();
+
+  const { before, during, after } = await switchUserAndMeasure(page, 'u_lowbalance', '₺30');
+  expect(during).toEqual(before);
+  expect(after).toEqual(before);
+});
+
+test('on a phone the menu sheet keeps its size while another user loads', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?user=u_ok');
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Account and sections' })).toContainText(/₺/);
+
+  const { before, during, after } = await switchUserAndMeasure(page, 'u_new', '₺250');
+  expect(before.sheet).not.toBeNull();
+  expect(during).toEqual(before);
+  expect(after).toEqual(before);
+});
+
 test('on a phone the frame is one column with the rail and the panel as sheets', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?user=u_ok');
