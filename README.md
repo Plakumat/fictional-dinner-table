@@ -59,7 +59,7 @@ cd client && npm install && npm run dev     # the client, http://localhost:5173
 | In `client/` | |
 |---|---|
 | `npm run dev` | the app; `?user=u_new` selects a user at load |
-| `npm test` | 148 unit and component tests (Vitest), about a second |
+| `npm test` | 168 unit and component tests (Vitest), about a second |
 | `npm run e2e` | the scenario table in a real browser (Playwright); starts both servers if they are not running. First time: `npx playwright install chromium` |
 | `npm run lint` · `npm run typecheck` · `npm run build` | |
 | `npm run capture` | regenerates `docs/screenshots/` |
@@ -471,7 +471,7 @@ recorded there.
 
 ## Tests
 
-`npm test`: 148 tests, no network.
+`npm test`: 168 tests, no network.
 
 The eleven behaviours the brief asks to pin down:
 
@@ -490,11 +490,15 @@ The eleven behaviours the brief asks to pin down:
 | an invalid prompt never renders a Confirm control | `ui/ui.test.tsx` |
 
 Also covered: the Zod/JSON-schema agreement, `params` identity and freezing,
-the link allowlist, hostile markdown rendered in a DOM, resuming, the
-help-center classifier and Turkish folding.
+the confirmation machine's own transitions, the server clock (latest sample
+wins, even backwards), the link allowlist, hostile markdown rendered in a
+DOM, resuming, new conversations, the help-center classifier and Turkish
+folding.
 
-`npm run e2e`: 34 Playwright tests, all 24 rows of the scenario table against
-the unmodified mock. Rows with ledger assertions end by running
+`npm run e2e`: 36 Playwright tests: all 24 rows of the scenario table against
+the unmodified mock, the bonus features, and a layout check at two desktop
+widths (no horizontal overflow, every region inside the viewport, before and
+after a streamed answer). Rows with ledger assertions end by running
 `scripts/check-ledger.mjs <id>` and requiring exit code 0: the same script,
 and so the same assertions, the reviewers run. Elements are found by role and
 accessible name, which makes the suite a check on the accessibility tree too.
