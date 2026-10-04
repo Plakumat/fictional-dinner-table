@@ -5,6 +5,9 @@ import type { ChatState, ChatStore } from '../state/chatStore';
 
 const StoreContext = createContext<ChatStore | null>(null);
 const ServerNowContext = createContext<number | null>(null);
+/** The server's calendar date. Kept apart from the ticking clock so that
+ *  everything that only needs the date (every order card) does not re-render twice a second. */
+const ServerTodayContext = createContext<string | null>(null);
 
 const TICK_MS = 500;
 
@@ -26,9 +29,13 @@ export function AppProviders({ store, clock, children }: { store: ChatStore; clo
     return () => clearInterval(id);
   }, [store, clock]);
 
+  const today = now === null ? null : istanbulDate(now);
+
   return (
     <StoreContext.Provider value={store}>
-      <ServerNowContext.Provider value={now}>{children}</ServerNowContext.Provider>
+      <ServerNowContext.Provider value={now}>
+        <ServerTodayContext.Provider value={today}>{children}</ServerTodayContext.Provider>
+      </ServerNowContext.Provider>
     </StoreContext.Provider>
   );
 }
@@ -47,8 +54,5 @@ export function useChat<T>(selector: (state: ChatState) => T): T {
 /** The server's time in ms, refreshed twice a second. null until the first response. */
 export const useServerNow = (): number | null => useContext(ServerNowContext);
 
-/** The server's calendar date (Europe/Istanbul), or null until the first response. */
-export function useServerToday(): string | null {
-  const now = useServerNow();
-  return now === null ? null : istanbulDate(now);
-}
+/** The server's calendar date (Europe/Istanbul), or null until the first response. Changes once a day. */
+export const useServerToday = (): string | null => useContext(ServerTodayContext);

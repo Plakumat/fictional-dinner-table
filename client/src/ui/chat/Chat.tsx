@@ -82,6 +82,9 @@ function Composer() {
   const streaming = useChat((state) => state.activeTurnId !== null);
   const [text, setText] = useState('');
 
+  // Controlled on purpose. React 19 form actions were tried here: the form's
+  // automatic reset runs a beat after the action, and text typed in that beat
+  // is wiped. A controlled value clears exactly when the message is sent.
   const submit = (event?: FormEvent) => {
     event?.preventDefault();
     if (text.trim() === '') return;

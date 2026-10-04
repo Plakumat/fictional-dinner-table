@@ -43,7 +43,15 @@ export function App() {
             }
           >
             <Routes>
-              <Route path="/" element={<Chat empty={<Home />} />} />
+              <Route
+                path="/"
+                element={
+                  <>
+                    <title>Sofra</title>
+                    <Chat empty={<Home />} />
+                  </>
+                }
+              />
               <Route path="/help" element={<HelpSearch />} />
               <Route path="/help/:docId" element={<HelpDoc />} />
             </Routes>
