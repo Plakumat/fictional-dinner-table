@@ -4,6 +4,7 @@ import { KB_PAGE_SIZE, useKbDoc, useKbSearch, type KbHit } from '../../api/queri
 import { highlight } from '../../core/kb/foldTr';
 import { formatDay } from '../../core/format';
 import { Icon } from '../Icon';
+import { DocSkeleton, LoadingNote, ResultsSkeleton } from '../Skeleton';
 import { DocView, TrustLabels } from '../sources/DocView';
 import styles from './help.module.css';
 
@@ -69,22 +70,33 @@ export function HelpSearch() {
   return (
     <main className={styles.page}>
       <title>Help center · Sofra</title>
-      <h2 className={styles.heading}>Help center</h2>
+      <div className={styles.hero}>
+        <h1>Help center</h1>
+        <p className="muted">Policies, answers and past support conversations. Every result says how far it can be trusted.</p>
+      </div>
 
-      <form className={styles.controls} role="search" onSubmit={(event) => (event.preventDefault(), update({ q: draft, page: 1 }))}>
-        <label className={styles.control}>
-          <span className={styles.controlLabel}>Search</span>
+      <form
+        className={styles.controls}
+        role="search"
+        onSubmit={(event) => {
+          event.preventDefault();
+          update({ q: draft, page: 1 });
+        }}
+      >
+        <label className={styles.searchPill}>
+          <Icon name="search" size={18} />
+          <span className="visually-hidden">Search the help center</span>
           <input
             type="search"
-            className={styles.input}
+            className={styles.searchInput}
             value={draft}
-            placeholder="e.g. delivery fee, İstanbul, refund"
+            placeholder="Search… delivery fee, İstanbul, refund"
             onChange={(event) => setDraft(event.target.value)}
           />
         </label>
-        <label className={styles.control}>
-          <span className={styles.controlLabel}>Show</span>
-          <select className={styles.input} value={category} onChange={(event) => update({ q: draft, category: event.target.value, page: 1 })}>
+        <label className={styles.filter}>
+          <span className={styles.filterLabel}>Show</span>
+          <select className="select" value={category} onChange={(event) => update({ q: draft, category: event.target.value, page: 1 })}>
             {CATEGORIES.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -118,6 +130,13 @@ export function HelpSearch() {
         </div>
       )}
 
+      {search.isPending && (
+        <>
+          <ResultsSkeleton />
+          <LoadingNote what="results" />
+        </>
+      )}
+
       {search.data && (
         <ol className={styles.results} aria-busy={search.isFetching} data-stale={search.isPlaceholderData}>
           {search.data.results.map((hit) => (
@@ -129,13 +148,13 @@ export function HelpSearch() {
       {search.data && pages > 1 && (
         <nav className={styles.pager} aria-label="Result pages">
           <button type="button" className="button" disabled={page <= 1} onClick={() => update({ page: page - 1 })}>
-            Previous
+            <Icon name="left" size={16} /> Previous
           </button>
           <span>
             Page {page} of {pages}
           </span>
           <button type="button" className="button" disabled={page >= pages} onClick={() => update({ page: page + 1 })}>
-            Next
+            Next <Icon name="right" size={16} />
           </button>
         </nav>
       )}
@@ -151,11 +170,12 @@ const Marked = ({ text, query }: { text: string; query: string }) => (
 function Result({ hit, query }: { hit: KbHit; query: string }) {
   return (
     <li className={styles.result}>
-      <h3 className={styles.resultTitle}>
-        <Link to={`/help/${encodeURIComponent(hit.id)}`}>
+      <Link to={`/help/${encodeURIComponent(hit.id)}`} className={styles.resultLink}>
+        <h2 className={styles.resultTitle}>
           <Marked text={hit.title} query={query} />
-        </Link>
-      </h3>
+        </h2>
+        <Icon name="right" size={18} />
+      </Link>
       <TrustLabels doc={hit} />
       {/* The snippet is document text: untrusted, and rendered as text. */}
       <p className={styles.snippet}>
@@ -173,10 +193,15 @@ export function HelpDoc() {
   const doc = useKbDoc(docId ?? null);
   return (
     <main className={styles.page}>
-      <p>
-        <Link to="/help">← Help center</Link>
-      </p>
-      {doc.isPending && <p className="muted">Loading document…</p>}
+      <Link to="/help" className={`button ${styles.back}`}>
+        <Icon name="back" size={16} /> Help center
+      </Link>
+      {doc.isPending && (
+        <>
+          <DocSkeleton />
+          <LoadingNote what="document" />
+        </>
+      )}
       {doc.isError && (
         <div className={styles.message}>
           <p>
@@ -188,10 +213,10 @@ export function HelpDoc() {
         </div>
       )}
       {doc.data && (
-        <>
+        <article className={styles.docCard}>
           <title>{`${doc.data.title} · Help center · Sofra`}</title>
           <DocView doc={doc.data} />
-        </>
+        </article>
       )}
     </main>
   );

@@ -5,6 +5,7 @@ import { formatDay, formatTry, relativeDay } from '../../core/format';
 import { OrderNote, StatusPill } from '../blocks/DataBlocks';
 import { cuisineLook, Food } from '../food/icons';
 import { Icon } from '../Icon';
+import { CartSkeleton, LoadingNote, OrderRowsSkeleton } from '../Skeleton';
 import styles from './shell.module.css';
 
 /**
@@ -23,10 +24,11 @@ export function RightPanel() {
         title="Your cart"
         query={cart}
         badge={cart.data ? `${cart.data.items.length} item${cart.data.items.length === 1 ? '' : 's'}` : undefined}
+        skeleton={<CartSkeleton />}
       >
         {(data) => <CartView cart={data} />}
       </Section>
-      <Section title="Orders" query={orders}>
+      <Section title="Orders" query={orders} skeleton={<OrderRowsSkeleton />}>
         {(data) => <OrdersView orders={data} />}
       </Section>
     </aside>
@@ -45,11 +47,13 @@ function Section<T>({
   title,
   query,
   badge,
+  skeleton,
   children,
 }: {
   title: string;
   query: QueryLike<T>;
   badge?: string | undefined;
+  skeleton: ReactNode;
   children: (data: T) => ReactNode;
 }) {
   return (
@@ -70,7 +74,10 @@ function Section<T>({
           </button>
         </div>
       ) : (
-        <p className={`${styles.panelMessage} muted`}>Loading {title.toLowerCase()}…</p>
+        <>
+          {skeleton}
+          <LoadingNote what={title.toLowerCase()} />
+        </>
       )}
     </section>
   );

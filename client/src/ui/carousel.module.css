@@ -1,0 +1,96 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  /* As tall as the buttons, whether or not they are shown. */
+  min-height: 36px;
+}
+
+.barText {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.barText h2 {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.note {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.arrows {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+/* Everything fits: the buttons have nothing to do and disappear, but keep their room. */
+.arrows[data-hidden='true'] {
+  visibility: hidden;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--linen);
+}
+
+.arrow:disabled {
+  border-style: dashed;
+  border-color: var(--line);
+  color: var(--ink-muted);
+  cursor: default;
+}
+
+.track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  /* No scrollbar: its appearance would change the row's height. The buttons and swiping move it. */
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.track > li {
+  flex: 0 0 272px;
+  display: flex;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 1023px) {
+  .track > li {
+    flex-basis: 240px;
+  }
+
+  .barText h2 {
+    font-size: 17px;
+  }
+}

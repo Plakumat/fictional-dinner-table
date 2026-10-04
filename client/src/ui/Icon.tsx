@@ -17,6 +17,12 @@ const PATHS = {
   replaced: 'M7 7h10l-3-3M17 17H7l3 3',
   home: 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z',
   plus: 'M12 5v14M5 12h14',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  cart: 'M3 5h2l2.5 11h11L21 8H7M9.5 20h.01M17 20h.01',
+  back: 'M19 12H5M11 6l-6 6 6 6',
+  left: 'M15 6l-6 6 6 6',
+  right: 'M9 6l6 6-6 6',
+  search: 'M20 20l-3.5-3.5M18 11a7 7 0 11-14 0 7 7 0 0114 0z',
 } as const;
 
 export type IconName = keyof typeof PATHS;

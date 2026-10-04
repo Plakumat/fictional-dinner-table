@@ -99,8 +99,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 12px;
-  /* Reserved for every response, so nothing moves when it settles. */
-  min-height: 36px;
+  /* Reserved for every response, as tall as its Try-again button, so nothing moves when it settles or fails. */
+  min-height: 40px;
 }
 
 .statusText {
@@ -151,10 +151,24 @@
   max-height: 140px;
   padding: 10px 0;
   border: 0;
-  outline: 0;
   resize: none;
   background: transparent;
   field-sizing: content;
+}
+
+/* The focus ring belongs to the pill, not to the text area inside it: a
+   pointer click and the keyboard both light the whole control, and no blue
+   box appears inside the rounded shape. */
+.input:focus,
+.input:focus-visible {
+  outline: 0;
+}
+
+.composer:focus-within {
+  border-color: var(--ink);
+  box-shadow:
+    0 0 0 3px var(--accent-tint),
+    0 10px 30px rgb(28 25 23 / 8%);
 }
 
 .iconButton {
@@ -170,9 +184,17 @@
   cursor: pointer;
 }
 
+.iconButton:hover:not(:disabled) {
+  background: var(--linen);
+}
+
 .iconButton:disabled {
   color: #a39c93;
   cursor: not-allowed;
+}
+
+.send:hover:not(:disabled) {
+  background: #000;
 }
 
 .send {
@@ -192,4 +214,31 @@
   padding-left: 18px;
   color: var(--ink-muted);
   font-size: 12.5px;
+}
+
+@media (max-width: 1023px) {
+  .transcript {
+    padding: 16px 14px 8px;
+  }
+
+  .user {
+    max-width: 88%;
+  }
+
+  .avatar {
+    display: none;
+  }
+
+  .composerWrap {
+    padding: 8px 10px 10px;
+  }
+
+  .composer {
+    padding: 6px 6px 6px 14px;
+    border-radius: 22px;
+  }
+
+  .composerHint {
+    display: none;
+  }
 }

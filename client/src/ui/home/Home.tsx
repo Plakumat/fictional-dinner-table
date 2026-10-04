@@ -2,8 +2,10 @@ import { useOrders, useProfile, useRestaurants } from '../../api/queries';
 import { useChat, useChatStore } from '../../app/AppContext';
 import { formatTry } from '../../core/format';
 import { RestaurantCard } from '../blocks/DataBlocks';
+import { Carousel } from '../Carousel';
 import { CATEGORIES, Food } from '../food/icons';
 import { Icon } from '../Icon';
+import { LoadingNote, RestaurantCardSkeleton, Skeleton } from '../Skeleton';
 import styles from './home.module.css';
 
 /**
@@ -41,40 +43,58 @@ export function Home() {
         ))}
       </ul>
 
-      <section aria-labelledby="near-you">
-        <div className={styles.sectionHead}>
-          <h2 id="near-you">Delivering to {profile.data?.district ?? '…'}</h2>
-          <span className="muted">The server's order</span>
-        </div>
+      <div aria-busy={!restaurants.data && !restaurants.isError}>
         {restaurants.data ? (
-          <ul className={styles.carousel} aria-label="Restaurants">
+          <Carousel label="Restaurants" heading={<h2>Delivering to {profile.data?.district ?? '…'}</h2>} note="The server's order">
             {restaurants.data.map((restaurant) => (
               <li key={restaurant.id}>
                 <RestaurantCard block={{ type: 'restaurant_card', restaurant_id: restaurant.id, ...restaurant }} />
               </li>
             ))}
-          </ul>
+          </Carousel>
         ) : restaurants.isError ? (
-          <p className={styles.message}>
-            <Icon name="alert" size={15} /> Could not load restaurants.
-            <button type="button" className="button" onClick={() => void restaurants.refetch()}>
-              Try again
-            </button>
-          </p>
+          <>
+            <h2 className={styles.heading}>Delivering to {profile.data?.district ?? '…'}</h2>
+            <p className={styles.message}>
+              <Icon name="alert" size={15} /> Could not load restaurants.
+              <button type="button" className="button" onClick={() => void restaurants.refetch()}>
+                Try again
+              </button>
+            </p>
+          </>
         ) : (
-          <p className="muted">Loading restaurants…</p>
+          <Carousel label="Restaurants" heading={<h2>Delivering to {profile.data?.district ?? '…'}</h2>} note="The server's order">
+            {[0, 1, 2, 3].map((i) => (
+              <li key={i}>
+                <RestaurantCardSkeleton />
+              </li>
+            ))}
+            <LoadingNote what="restaurants" />
+          </Carousel>
         )}
-      </section>
+      </div>
 
       <div className={styles.twoUp}>
-        <div className={styles.promo}>
+        <div className={styles.promo} aria-busy={orders.isPending}>
           <div>
             <span className={styles.label}>Your last order</span>
-            <strong>{last ? `${last.restaurant} · ${formatTry(last.total_try)}` : orders.isPending ? '…' : 'No orders yet'}</strong>
-            {last && (
-              <span className="muted">
-                <span className="mono">{last.order_id}</span> · {last.status}
-              </span>
+            {last ? (
+              <>
+                <strong>
+                  {last.restaurant} · {formatTry(last.total_try)}
+                </strong>
+                <span className="muted">
+                  <span className="mono">{last.order_id}</span> · {last.status}
+                </span>
+              </>
+            ) : orders.isPending ? (
+              <>
+                <Skeleton width="60%" height={18} />
+                <Skeleton width="45%" height={12} />
+                <LoadingNote what="orders" />
+              </>
+            ) : (
+              <strong>No orders yet</strong>
             )}
           </div>
           {/* The order list carries no line items, so there is nothing to reorder from. */}

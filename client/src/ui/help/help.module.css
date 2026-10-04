@@ -1,57 +1,86 @@
 .page {
-  display: grid;
-  align-content: start;
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
   width: 100%;
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px 24px 40px;
+  padding: 36px 40px 48px;
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
 
-.page a {
-  color: var(--focus);
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.heading {
-  font-size: 20px;
+.hero h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
+  grid-template-columns: minmax(0, 1fr) 240px;
   gap: 12px;
+  align-items: end;
 }
 
-.control {
-  display: grid;
+/* The search box looks like the composer: a pill that lights up as a whole. */
+.searchPill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-muted);
+}
+
+.searchPill:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+}
+
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
   gap: 2px;
 }
 
-.controlLabel {
-  color: var(--ink-muted);
-  font-size: 12.5px;
+.filterLabel {
+  font-size: 12px;
   font-weight: 700;
-}
-
-.input {
-  width: 100%;
-  min-height: 38px;
-  padding: 6px 10px;
-  border: 1.5px solid var(--line-strong);
-  border-radius: 8px;
-  background: var(--surface);
+  color: var(--ink-muted);
 }
 
 .legend {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
+  border-radius: 14px;
+  background: var(--linen);
   font-size: 13.5px;
 }
 
@@ -67,7 +96,8 @@
 }
 
 .results {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -77,16 +107,32 @@
 }
 
 .result {
-  display: grid;
-  gap: 4px;
-  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 16px;
   background: var(--surface);
 }
 
+.resultLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.resultLink:hover .resultTitle {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .resultTitle {
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .snippet {
@@ -101,10 +147,12 @@
 
 .result mark {
   padding: 0 1px;
-  background: #ffe28a;
+  border-radius: 3px;
+  background: var(--saffron-tint);
   color: inherit;
-  font-weight: 700;
+  font-weight: 800;
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .pager {
@@ -116,13 +164,45 @@
 }
 
 .message {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  justify-items: start;
+  align-items: flex-start;
 }
 
 .message p {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.back {
+  align-self: flex-start;
+  text-decoration: none;
+}
+
+.docCard {
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+@media (max-width: 1023px) {
+  .page {
+    gap: 12px;
+    padding: 20px 16px 32px;
+  }
+
+  .hero h1 {
+    font-size: 26px;
+  }
+
+  .controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .docCard {
+    padding: 16px;
+  }
 }

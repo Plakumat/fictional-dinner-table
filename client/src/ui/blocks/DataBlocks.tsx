@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useChatStore } from '../../app/AppContext';
 import type { BlockOf } from '../../core/contract/schemas';
 import { formatDay, formatTry, relativeDay } from '../../core/format';
+import { Carousel } from '../Carousel';
 import { cuisineLook, Food } from '../food/icons';
 import { Icon, type IconName } from '../Icon';
 import styles from './blocks.module.css';
@@ -54,13 +55,16 @@ export function RestaurantCard({ block }: { block: BlockOf<'restaurant_card'> })
 
 /** Several restaurant cards from one answer, side by side, in the server's order. */
 export const RestaurantRow = ({ items }: { items: BlockOf<'restaurant_card'>[] }) => (
-  <ul className={styles.carousel} aria-label="Restaurants">
+  <Carousel
+    label="Restaurants"
+    heading={<span className={styles.rowLabel}>{items.length === 1 ? '1 restaurant' : `${items.length} restaurants`}</span>}
+  >
     {items.map((block) => (
       <li key={block.restaurant_id}>
         <RestaurantCard block={block} />
       </li>
     ))}
-  </ul>
+  </Carousel>
 );
 
 interface MenuProps {

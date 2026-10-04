@@ -4,6 +4,7 @@ import { useChat, useChatStore } from '../../app/AppContext';
 import { formatTry } from '../../core/format';
 import { Logo } from '../food/icons';
 import { Icon } from '../Icon';
+import { LoadingNote, Skeleton } from '../Skeleton';
 import styles from './shell.module.css';
 
 interface Props {
@@ -46,35 +47,60 @@ export function Sidebar({ inspectorOpen, onToggleInspector }: Props) {
       </nav>
 
       <div className={styles.sideCards}>
-        <div className={styles.sideCard}>
+        <div className={styles.sideCard} aria-busy={profile.isPending}>
           <span className={styles.label}>Deliver to</span>
-          <span className={styles.strong}>{profile.data?.address ?? (profile.isError ? 'Address unavailable' : '…')}</span>
-          {active > 0 && (
-            <span className={styles.activeNote}>
-              <Icon name="clock" size={13} /> {active} order{active > 1 ? 's' : ''} on the way
-            </span>
+          {profile.data ? (
+            <span className={styles.strong}>{profile.data.address ?? profile.data.district ?? '—'}</span>
+          ) : profile.isError ? (
+            <span className={styles.strong}>Address unavailable</span>
+          ) : (
+            <>
+              <Skeleton width="75%" height={18} />
+              <LoadingNote what="address" />
+            </>
           )}
+          <span className={styles.activeNote}>
+            {active > 0 && (
+              <>
+                <Icon name="clock" size={13} /> {active} order{active > 1 ? 's' : ''} on the way
+              </>
+            )}
+          </span>
         </div>
 
         <div className={styles.sideCard}>
           <label className={styles.label} htmlFor="user-select">
             User
           </label>
-          {/* No authentication in the mock. Switching user starts a new conversation and voids live prompts. */}
-          <select id="user-select" className={styles.select} value={userId} onChange={(event) => store.getState().switchUser(event.target.value)}>
+          {/* No authentication in the mock: these four users exist to exercise the gates. Their ids say which. */}
+          <select id="user-select" className="select" value={userId} onChange={(event) => store.getState().switchUser(event.target.value)}>
             {users.data ? (
               users.data.map((user) => (
                 <option key={user.id} value={user.id}>
-                  {user.display_name}
+                  {user.display_name} · {user.id}
                 </option>
               ))
             ) : (
               <option value={userId}>{userId}</option>
             )}
           </select>
+          {/* The raw flags behind the gates, as the server sends them. */}
+          <p className={styles.facts} aria-label="Account flags">
+            {profile.data ? (
+              <>
+                <span>payment_method: {String(profile.data.payment_method ?? '—')}</span>
+                <span>age_verified: {String(profile.data.age_verified ?? '—')}</span>
+                <span>district: {profile.data.district ?? '—'}</span>
+              </>
+            ) : (
+              <Skeleton width="90%" height={11} />
+            )}
+          </p>
           <div className={styles.wallet} aria-live="polite">
             <span className={styles.label}>Wallet</span>
-            <b data-busy={profile.isFetching}>{profile.data ? formatTry(profile.data.wallet_balance_try) : profile.isError ? 'unavailable' : '…'}</b>
+            <b data-busy={profile.isFetching}>
+              {profile.data ? formatTry(profile.data.wallet_balance_try) : profile.isError ? 'unavailable' : <Skeleton width={64} height={18} />}
+            </b>
           </div>
           {profile.isError && (
             <button type="button" className="button" onClick={() => void profile.refetch()}>

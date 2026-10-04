@@ -16,6 +16,8 @@ const profileSchema = z.object({
   wallet_balance_try: z.number(),
   district: z.string().optional(),
   address: z.string().optional(),
+  payment_method: z.boolean().optional(),
+  age_verified: z.boolean().optional(),
 });
 
 const cartSchema = z.object({
