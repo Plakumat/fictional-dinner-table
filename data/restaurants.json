@@ -1,0 +1,501 @@
+{
+  "restaurants": [
+    {
+      "id": "rst_01",
+      "name": "Köfteci Ramiz",
+      "cuisine": "Turkish",
+      "city": "İstanbul",
+      "rating": 4.2,
+      "delivery_fee_try": 15,
+      "min_order_try": 150,
+      "eta_min": 25,
+      "district": "Kadıköy",
+      "delivery_districts": [
+        "Kadıköy",
+        "Üsküdar",
+        "Ataşehir"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_001",
+          "name": "Izgara Köfte",
+          "price_try": 180,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_002",
+          "name": "Ayran",
+          "price_try": 25,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_003",
+          "name": "Künefe",
+          "price_try": 90,
+          "category": "dessert",
+          "age_restricted": false,
+          "available": false
+        },
+        {
+          "item_id": "itm_004",
+          "name": "Ev Yapımı Limonata",
+          "price_try": 40,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_02",
+      "name": "Pizza Locale",
+      "cuisine": "Italian",
+      "city": "İstanbul",
+      "rating": 3.9,
+      "delivery_fee_try": 30,
+      "min_order_try": 100,
+      "eta_min": 35,
+      "district": "Kadıköy",
+      "delivery_districts": [
+        "Kadıköy",
+        "Üsküdar"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_005",
+          "name": "Margherita",
+          "price_try": 220,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_006",
+          "name": "Diavola",
+          "price_try": 260,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_007",
+          "name": "Tiramisu",
+          "price_try": 110,
+          "category": "dessert",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_008",
+          "name": "Energy Drink 250 ml",
+          "price_try": 65,
+          "category": "beverage",
+          "age_restricted": true,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_03",
+      "name": "Sushi Roll",
+      "cuisine": "Japanese",
+      "city": "İstanbul",
+      "rating": 4.4,
+      "delivery_fee_try": 30,
+      "min_order_try": 100,
+      "eta_min": 25,
+      "district": "Şişli",
+      "delivery_districts": [
+        "Şişli",
+        "Beşiktaş"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_009",
+          "name": "California Roll",
+          "price_try": 240,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_010",
+          "name": "Salmon Nigiri",
+          "price_try": 180,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_011",
+          "name": "Miso Çorba",
+          "price_try": 70,
+          "category": "starter",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_012",
+          "name": "Energy Drink Tropical",
+          "price_try": 70,
+          "category": "beverage",
+          "age_restricted": true,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_04",
+      "name": "Burger Stop",
+      "cuisine": "Fast Food",
+      "city": "İstanbul",
+      "rating": 3.9,
+      "delivery_fee_try": 25,
+      "min_order_try": 100,
+      "eta_min": 30,
+      "district": "Kadıköy",
+      "delivery_districts": [
+        "Kadıköy",
+        "Ataşehir"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_013",
+          "name": "Cheeseburger",
+          "price_try": 195,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_014",
+          "name": "Patates Kızartması",
+          "price_try": 65,
+          "category": "side",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_015",
+          "name": "Milkshake",
+          "price_try": 85,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_016",
+          "name": "Energy Drink XL",
+          "price_try": 80,
+          "category": "beverage",
+          "age_restricted": true,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_05",
+      "name": "Yeşil Kase",
+      "cuisine": "Vegan",
+      "city": "İstanbul",
+      "rating": 3.9,
+      "delivery_fee_try": 25,
+      "min_order_try": 100,
+      "eta_min": 45,
+      "district": "Şişli",
+      "delivery_districts": [
+        "Şişli",
+        "Beşiktaş",
+        "Beyoğlu"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_017",
+          "name": "Falafel Kase",
+          "price_try": 165,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_018",
+          "name": "Avokado Salata",
+          "price_try": 145,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_019",
+          "name": "Kombucha",
+          "price_try": 60,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_06",
+      "name": "Tatlıcı Sultan",
+      "cuisine": "Dessert",
+      "city": "İstanbul",
+      "rating": 3.9,
+      "delivery_fee_try": 15,
+      "min_order_try": 200,
+      "eta_min": 45,
+      "district": "Beyoğlu",
+      "delivery_districts": [
+        "Beyoğlu",
+        "Şişli",
+        "Beşiktaş"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_020",
+          "name": "Baklava (per portion)",
+          "price_try": 130,
+          "category": "dessert",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_021",
+          "name": "Sütlaç",
+          "price_try": 70,
+          "category": "dessert",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_022",
+          "name": "Türk Kahvesi",
+          "price_try": 45,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_07",
+      "name": "Ege Balık",
+      "cuisine": "Seafood",
+      "city": "İstanbul",
+      "rating": 4.8,
+      "delivery_fee_try": 30,
+      "min_order_try": 200,
+      "eta_min": 40,
+      "district": "Beşiktaş",
+      "delivery_districts": [
+        "Beşiktaş",
+        "Şişli"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_023",
+          "name": "Levrek Izgara",
+          "price_try": 320,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_024",
+          "name": "Kalamar Tava",
+          "price_try": 190,
+          "category": "starter",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_025",
+          "name": "Energy Drink Zero",
+          "price_try": 65,
+          "category": "beverage",
+          "age_restricted": true,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_08",
+      "name": "Tandır Evi",
+      "cuisine": "Turkish",
+      "city": "İstanbul",
+      "rating": 3.9,
+      "delivery_fee_try": 15,
+      "min_order_try": 100,
+      "eta_min": 45,
+      "district": "Beşiktaş",
+      "delivery_districts": [
+        "Beşiktaş",
+        "Beyoğlu",
+        "Şişli"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_026",
+          "name": "Kuzu Tandır",
+          "price_try": 340,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_027",
+          "name": "Mercimek Çorba",
+          "price_try": 60,
+          "category": "starter",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_028",
+          "name": "Şalgam",
+          "price_try": 30,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_09",
+      "name": "Noodle Bar",
+      "cuisine": "Asian",
+      "city": "İstanbul",
+      "rating": 4.7,
+      "delivery_fee_try": 20,
+      "min_order_try": 150,
+      "eta_min": 30,
+      "district": "Üsküdar",
+      "delivery_districts": [
+        "Üsküdar",
+        "Kadıköy"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_029",
+          "name": "Pad Thai",
+          "price_try": 210,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_030",
+          "name": "Spring Roll",
+          "price_try": 90,
+          "category": "starter",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_031",
+          "name": "Thai Ice Tea",
+          "price_try": 55,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_10",
+      "name": "Kahvaltı Durağı",
+      "cuisine": "Breakfast",
+      "city": "İstanbul",
+      "rating": 4.4,
+      "delivery_fee_try": 30,
+      "min_order_try": 150,
+      "eta_min": 45,
+      "district": "Üsküdar",
+      "delivery_districts": [
+        "Üsküdar",
+        "Kadıköy",
+        "Ataşehir"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_032",
+          "name": "Serpme Kahvaltı (for 2)",
+          "price_try": 480,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_033",
+          "name": "Menemen",
+          "price_try": 140,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_034",
+          "name": "Çay (samovar)",
+          "price_try": 60,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "rst_11",
+      "name": "Napoli Fırın",
+      "cuisine": "Italian",
+      "city": "İstanbul",
+      "rating": 4.6,
+      "delivery_fee_try": 20,
+      "min_order_try": 120,
+      "eta_min": 30,
+      "district": "Kadıköy",
+      "delivery_districts": [
+        "Kadıköy",
+        "Ataşehir",
+        "Üsküdar"
+      ],
+      "menu": [
+        {
+          "item_id": "itm_035",
+          "name": "Margherita Napoletana",
+          "price_try": 210,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_036",
+          "name": "Quattro Formaggi",
+          "price_try": 280,
+          "category": "main",
+          "age_restricted": false,
+          "available": true
+        },
+        {
+          "item_id": "itm_037",
+          "name": "Panna Cotta",
+          "price_try": 95,
+          "category": "dessert",
+          "age_restricted": false,
+          "available": false
+        },
+        {
+          "item_id": "itm_038",
+          "name": "Limonlu Soda",
+          "price_try": 45,
+          "category": "beverage",
+          "age_restricted": false,
+          "available": true
+        }
+      ]
+    }
+  ]
+}

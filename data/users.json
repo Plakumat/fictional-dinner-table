@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": "u_ok",
+      "display_name": "Deniz Yılmaz",
+      "wallet_balance_try": 800,
+      "payment_method": true,
+      "age_verified": true,
+      "address": "Kadıköy, İstanbul",
+      "district": "Kadıköy"
+    },
+    {
+      "id": "u_unverified",
+      "display_name": "Mert Demir",
+      "wallet_balance_try": 500,
+      "payment_method": true,
+      "age_verified": false,
+      "address": "Beşiktaş, İstanbul",
+      "district": "Beşiktaş"
+    },
+    {
+      "id": "u_lowbalance",
+      "display_name": "Ece Kaya",
+      "wallet_balance_try": 30,
+      "payment_method": false,
+      "age_verified": true,
+      "address": "Şişli, İstanbul",
+      "district": "Şişli"
+    },
+    {
+      "id": "u_new",
+      "display_name": "Zeynep Aydın",
+      "wallet_balance_try": 250,
+      "payment_method": true,
+      "age_verified": true,
+      "address": "Üsküdar, İstanbul",
+      "district": "Üsküdar"
+    }
+  ],
+  "_note": "All data is synthetic and belongs to the fictional 'Sofra' application."
+}

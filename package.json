@@ -1,0 +1,12 @@
+{
+  "name": "sofra-frontend-case-study",
+  "private": true,
+  "description": "Sofra — Frontend Engineering Case Study: the mock assistant backend",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node mock-server/server.mjs",
+    "check": "node scripts/check-ledger.mjs",
+    "reset": "node scripts/check-ledger.mjs --reset"
+  }
+}

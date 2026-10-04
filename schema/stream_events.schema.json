@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://sofra.example/stream_events.schema.json",
+  "title": "Sofra — chat stream event (one NDJSON line)",
+  "description": "POST /api/chat responds with application/x-ndjson: one JSON object per line. Applying the events in seq order yields a document that must validate against ui_spec.schema.json. The transport gives no guarantees beyond TCP: network chunks do not align with lines or with UTF-8 characters, events can be delivered more than once, and a stream can end without a `done` event.",
+  "type": "object",
+  "required": ["seq", "event"],
+  "properties": {
+    "seq": { "type": "integer", "minimum": 1, "description": "Strictly increasing per stream. An event whose seq has already been applied is a duplicate and must be ignored." },
+    "event": { "type": "string", "enum": ["meta", "block", "text_delta", "audit", "done", "error"] }
+  },
+  "oneOf": [
+    {
+      "description": "Always the first event.",
+      "properties": {
+        "event": { "const": "meta" },
+        "version": { "type": "string", "description": "ui_spec version of this response. The client supports \"1\" only." },
+        "request_id": { "type": "string" },
+        "conversation_id": { "type": "string", "description": "Send it back on the next turn to continue the conversation." },
+        "server_now": { "type": "string", "description": "ISO-8601. The server's clock. It is NOT the browser's clock." }
+      },
+      "required": ["version", "request_id", "conversation_id", "server_now"]
+    },
+    {
+      "description": "A complete block at position `index` of the final `blocks` array. Text blocks arrive with markdown \"\" and are filled by subsequent text_delta events.",
+      "properties": {
+        "event": { "const": "block" },
+        "index": { "type": "integer", "minimum": 0 },
+        "block": { "type": "object", "description": "Validate against ui_spec.schema.json#/definitions/block. May be invalid or of an unknown type." }
+      },
+      "required": ["index", "block"]
+    },
+    {
+      "description": "Append `delta` to the markdown of the text block at `index`. Deltas split text at arbitrary points, including inside markdown syntax.",
+      "properties": {
+        "event": { "const": "text_delta" },
+        "index": { "type": "integer", "minimum": 0 },
+        "delta": { "type": "string" }
+      },
+      "required": ["index", "delta"]
+    },
+    {
+      "description": "The audit record. Arrives after the last block.",
+      "properties": { "event": { "const": "audit" }, "audit": { "type": "object" } },
+      "required": ["audit"]
+    },
+    {
+      "description": "The response is complete. A stream that closes without `done` is incomplete, whatever it has delivered.",
+      "properties": { "event": { "const": "done" } }
+    },
+    {
+      "description": "The server gave up on this response. Nothing after it will arrive.",
+      "properties": {
+        "event": { "const": "error" },
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "retryable": { "type": "boolean" }
+      },
+      "required": ["code", "message", "retryable"]
+    }
+  ]
+}

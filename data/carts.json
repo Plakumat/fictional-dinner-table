@@ -1,0 +1,32 @@
+{
+  "u_ok": {
+    "restaurant_id": "rst_04",
+    "items": [
+      {
+        "item_id": "itm_014",
+        "qty": 1
+      },
+      {
+        "item_id": "itm_015",
+        "qty": 1
+      }
+    ]
+  },
+  "u_unverified": {
+    "restaurant_id": null,
+    "items": []
+  },
+  "u_lowbalance": {
+    "restaurant_id": null,
+    "items": []
+  },
+  "u_new": {
+    "restaurant_id": "rst_01",
+    "items": [
+      {
+        "item_id": "itm_001",
+        "qty": 2
+      }
+    ]
+  }
+}

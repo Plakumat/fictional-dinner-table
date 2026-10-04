@@ -1,0 +1,6 @@
+# The mock and its data are the reviewers' reference: a commit that modifies them is refused.
+if git diff --cached --diff-filter=M --name-only | grep -qE '^(mock-server/|data/|schema/|scripts/|scenarios\.jsonl$|package\.json$)'; then
+  echo "pre-commit: mock-server/, data/, schema/, scripts/, scenarios.jsonl and the root package.json must stay unmodified." >&2
+  exit 1
+fi
+cd client && npx lint-staged && npx tsc --noEmit && npx vitest run --reporter=dot
