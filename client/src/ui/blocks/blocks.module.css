@@ -403,6 +403,10 @@
   font-weight: 700;
 }
 
+.noteHint {
+  font-weight: 500;
+}
+
 /* ---- verification gate: blocked ---- */
 
 .gate {

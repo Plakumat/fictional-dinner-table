@@ -230,9 +230,16 @@ export function OrderDate({ date, today }: { date: string; today: string | null 
 }
 
 /** A customer's note, verbatim, as text. */
+/**
+ * A note written by a customer. It is data, not markup: whatever it contains
+ * (HTML tags, markdown links, image syntax) is shown as the characters that
+ * were typed, as one React text node. Nothing in it can be clicked or loaded.
+ */
 export const OrderNote = ({ note }: { note: string }) => (
   <p className={styles.note}>
-    <span className={styles.noteLabel}>Customer note</span>
+    <span className={styles.noteLabel}>
+      Customer note <span className={styles.noteHint}>· shown as written</span>
+    </span>
     {note}
   </p>
 );

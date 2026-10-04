@@ -305,7 +305,13 @@ carries the same hostile notes as the chat.
 
 The rule is applied twice, in `urlTransform` and in the components that draw
 links and images. `sc_17` clicks every copy of "Tap here to claim your refund"
-and checks the ledger: zero beacons.
+and checks the ledger: zero beacons. A second test (`e2e/untrusted.spec.ts`)
+does the same for the order list the panel loads over REST, on a desktop and
+in the phone sheet, without the chat being involved at all: the notes are
+there as text, nothing in them is an element, and the ledger stays at zero.
+The payload is visible on screen, as the characters the customer typed,
+labelled "shown as written": that is what "render it as text" means, and the
+reviewer can see at a glance that nothing was made of it.
 
 **Half-received markdown.** Deltas split inside `**bold**` and inside links.
 `stableMarkdown.ts` closes an unfinished marker on the last line while the
@@ -382,11 +388,15 @@ transcript follows the stream only while the user is at the bottom. The
 checkout card lays itself out by its own width (a container query), so it
 holds together in the workbench's narrow column and on a phone as well as in
 the transcript. Everything that loads from the server has a skeleton of the
-size it will have, so the page does not jump when data arrives. An e2e test
-pins all of this: while the longest answer the mock has streams in, the
-composer, the rail, the panel and every earlier turn keep their exact
-position and size, and the browser's own cumulative layout shift stays under
-0.1, the "good" threshold.
+size it will have, so the page does not jump when data arrives; in the
+account rail every line that loads (the address, the three account flags,
+the wallet) has a fixed pixel height, and the phone sheets have a fixed
+width rather than the width of whatever is in them. E2e tests pin all of
+this: while the longest answer the mock has streams in, the composer, the
+rail, the panel and every earlier turn keep their exact position and size,
+and the browser's own cumulative layout shift stays under 0.1, the "good"
+threshold; and while another user's profile is held back on the network,
+the rail and the phone sheet do not move by a pixel.
 
 **Small screens.** Below 1024px the frame becomes one column that fills the
 screen exactly: a top bar with a menu button and a cart button, the rail and
@@ -473,11 +483,12 @@ wins, even backwards), the link allowlist, hostile markdown rendered in a
 DOM, resuming, new conversations, the help-center classifier and Turkish
 folding.
 
-`npm run e2e`: 38 Playwright tests: all 24 rows of the scenario table against
-the unmodified mock, the bonus features, and the layout: the frame at two
-desktop widths (no horizontal overflow, every region inside the viewport, the
-select with room for its chevron), the stability of everything on screen while
-an answer streams, and the phone layout with its sheets. Rows with ledger assertions end by running
+`npm run e2e`: 42 Playwright tests: all 24 rows of the scenario table against
+the unmodified mock, the bonus features, the order notes that arrive over
+REST, and the layout: the frame at two desktop widths (no horizontal
+overflow, every region inside the viewport, the select with room for its
+chevron), the stability of everything on screen while an answer streams and
+while a user switches, and the phone layout with its sheets. Rows with ledger assertions end by running
 `scripts/check-ledger.mjs <id>` and requiring exit code 0: the same script,
 and so the same assertions, the reviewers run. Elements are found by role and
 accessible name, which makes the suite a check on the accessibility tree too.
