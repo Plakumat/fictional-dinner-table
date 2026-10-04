@@ -9,3 +9,6 @@ test-results/
 
 # The original brief as a PDF is not part of the repository.
 *.pdf
+
+# The brief is the company's; it stays local.
+docs/case-brief.md

@@ -2,8 +2,9 @@
 
 This is my submission for the Sofra frontend case study: the web client in
 [`client/`](client/), built against the unmodified mock in `mock-server/`.
-The original brief is kept verbatim in [`docs/case-brief.md`](docs/case-brief.md);
-the decisions behind the client, with the alternatives turned down, are in
+The brief itself is not reproduced here; what it asked for is summarised
+under [What is built](#what-is-built). The decisions behind the client, with
+the alternatives turned down, are in
 [`docs/architecture-decisions.md`](docs/architecture-decisions.md), and
 [`docs/README.md`](docs/README.md) indexes the rest.
 

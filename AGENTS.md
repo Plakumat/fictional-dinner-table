@@ -8,8 +8,9 @@ are short on purpose; the reasons behind them are in `README.md` and
 
 The web client for Sofra, a food-delivery assistant whose backend answers with
 model-generated UI documents. The backend is mocked in `mock-server/`. The
-client lives in `client/` (Vite, React, TypeScript). The brief is
-`docs/case-brief.md`.
+client lives in `client/` (Vite, React, TypeScript). The brief is not part of
+the repository; `README.md` says what it asked for, and `scenarios.jsonl` is
+its scenario table in machine-readable form.
 
 ## Never
 

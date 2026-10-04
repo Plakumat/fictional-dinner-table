@@ -5,7 +5,6 @@ architecture, and why. The pages here go one level deeper.
 
 | Page | What it is for |
 |---|---|
-| [`case-brief.md`](case-brief.md) | The brief, kept verbatim. The source of every must-have and bonus item |
 | [`architecture-decisions.md`](architecture-decisions.md) | The ledger of decisions: each with its reason and the alternative turned down, plus what the mock does that the client depends on |
 | [`../client/src/core/README.md`](../client/src/core/README.md) | The map of the dangerous decisions: the file each lives in and the test that pins it |
 | [`diagrams/`](diagrams/) | The diagrams below, as Mermaid sources (`.mmd`) and rendered PNGs. Nothing needs rendering to read them; `npm run diagrams` in `client/` re-renders a source after a change |
