@@ -1,0 +1,52 @@
+%% What happens between a click on "Place order" and the wallet changing.
+%% The lock is taken before anything asynchronous; a lost response is
+%% reconciled through the status endpoint and never re-approved.
+sequenceDiagram
+    autonumber
+    actor U as User
+    participant C as Checkout card<br/>(ui/blocks)
+    participant S as chatStore<br/>(state)
+    participant M as machine.ts<br/>(core, pure)
+    participant A as chatApi<br/>(api)
+    participant X as Mock server
+    participant Q as TanStack Query
+
+    U->>C: click Place order (or Enter / Space on the button)
+    C->>S: confirm(token)
+    S->>M: beginConfirm(registry, token, serverNow)
+    M-->>S: live → confirming, or null
+    Note over S,M: Synchronous. A second click, a triple click or key repeat<br/>finds "confirming" and sends nothing.
+    S->>A: execute(user_id, confirm_token, params as frozen)
+    A->>X: POST /api/actions/execute
+
+    alt 200 · carried out
+        X-->>A: { blocks, audit } + X-Sofra-Now
+        A-->>S: document
+        S->>M: executed → confirmed
+        S->>S: parseDocument → result drawn under the turn
+    else 409 · 410 · 422 · refused
+        X-->>A: { blocks, audit } + error code
+        A-->>S: document + code
+        S->>M: rejected(code) → expired · superseded · rejected
+        S->>S: parseDocument → "not carried out", the server's words drawn<br/>(a first 410 brings a fresh prompt: registered like any other)
+    else no response · timeout 15 s · unreadable body
+        A-->>S: no_response
+        S->>M: no_response → reconciling
+        loop 0 s · 1 s · 2 s · 4 s
+            S->>A: tokenStatus(token)
+            A->>X: GET /api/actions/status
+            X-->>A: { state, result? }
+        end
+        alt used
+            S->>M: status(used) → confirmed · the original result drawn
+        else live
+            S->>M: status(live) → live again, "nothing ran"
+        else unreachable
+            S->>M: status_unreachable → unresolved · "Check again"
+        end
+    end
+
+    S->>Q: invalidate ['account', user_id]
+    Q->>X: GET wallet · cart · orders
+    X-->>Q: fresh numbers
+    Q-->>U: the panels update · nothing was computed on the client

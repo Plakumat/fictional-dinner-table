@@ -2,32 +2,12 @@
 
 This is my submission for the Sofra frontend case study: the web client in
 [`client/`](client/), built against the unmodified mock in `mock-server/`.
-The original brief is kept verbatim in [`docs/case-brief.md`](docs/case-brief.md).
+The original brief is kept verbatim in [`docs/case-brief.md`](docs/case-brief.md);
+the decisions behind the client, with the alternatives turned down, are in
+[`docs/architecture-decisions.md`](docs/architecture-decisions.md), and
+[`docs/README.md`](docs/README.md) indexes the rest.
 
-```mermaid
-flowchart LR
-    subgraph server["Mock server (unmodified)"]
-        chat["POST /api/chat<br/>NDJSON stream"]
-        exec["POST /api/actions/execute"]
-        rest["GET users · cart · orders · restaurants · kb"]
-    end
-    subgraph core["client/src/core — pure TypeScript, no React"]
-        ndjson["ndjson.ts<br/>bytes → lines"] --> reducer["response.ts<br/>events → one response"]
-        reducer --> parse["parseBlock.ts<br/>valid | unknown | invalid"]
-        machine["machine.ts<br/>confirmation states"]
-        clock["serverClock.ts"]
-    end
-    store["state/chatStore.ts<br/>orchestration"]
-    query["TanStack Query<br/>server state"]
-    ui["ui/ — draws `valid` blocks only"]
-    chat --> ndjson
-    exec --> parse
-    parse --> store
-    machine --> store
-    clock --> store
-    store --> ui
-    rest --> query --> ui
-```
+![One order, from the message to the wallet: the answer streams in, every block is checked before it is drawn, the user confirms on the card's own button, exactly one request goes out, the server answers, and wallet, cart and orders are fetched again](docs/diagrams/00-the-flow.png)
 
 - [Run it](#run-it)
 - [What is built](#what-is-built)
@@ -106,6 +86,8 @@ cannot import React, the store or the API layer), and another forbids
 `Date.now()` and `new Date()` everywhere in `src/`, because the only clock
 that matters is the server's.
 
+![The whole client on one page: the given server, the pure core, the store, the query cache and the UI](docs/diagrams/01-overview.png)
+
 ```
 client/src/
   core/            framework-free; the dangerous decisions
@@ -129,18 +111,7 @@ client/e2e/        the scenario table
 
 ### One pipeline for every server document
 
-```
-POST /api/chat   bytes
-   → ndjson decoder     TextDecoder in streaming mode + a line buffer
-   → response reducer   duplicate seq, version, done / error / cut
-   → parseBlock         valid | unknown | invalid
-   → store              transcript + confirmation registry
-   → BlockView          draws the `valid` arm only
-
-POST /api/actions/execute   ─┐
-GET  /api/actions/status     ├─ a whole ui_spec document → parseDocument → the same store, the same BlockView
-GET  /api/conversations/:id ─┘
-```
+![A streamed answer, an execute response and a restored conversation all pass through the same decoder, reducer, parseBlock, store and renderer](docs/diagrams/02-pipeline.png)
 
 An execute response is also a `{ blocks, audit }` document, so it enters the
 same pipeline as a streamed answer. That is why a `410` that carries a fresh
@@ -248,24 +219,7 @@ balance that is not a number is an error state with a Retry, not `NaN`.
 `core/confirmation/machine.ts`, pure functions over a registry keyed by confirm
 token.
 
-```mermaid
-stateDiagram-v2
-    [*] --> live: response finished, prompt valid
-    live --> confirming: confirm() — the lock
-    confirming --> confirmed: 200
-    confirming --> expired: 410
-    confirming --> superseded: 409 token_superseded
-    confirming --> rejected: 403 / 409 / 422
-    confirming --> reconciling: no response
-    reconciling --> confirmed: status = used (+ original result)
-    reconciling --> live: status = live (never arrived)
-    reconciling --> expired: status = expired
-    reconciling --> unresolved: status unreachable
-    unresolved --> reconciling: "Check again"
-    live --> expired: deadline on the server clock
-    live --> superseded: newer prompt, same action
-    live --> void: user switched / new conversation
-```
+![The lifecycle of one confirmation prompt: live, confirming, confirmed, expired, superseded, rejected, reconciling, unresolved, void](docs/diagrams/03-confirmation-states.png)
 
 Why this lives in a registry and not in the card component:
 
@@ -300,7 +254,9 @@ reached either, the card says the outcome is unknown and offers **Check
 again**, which asks again; it never offers Confirm. If the server says the
 token is still `live`, the request never arrived: nothing ran, the card says
 so and is live again. I chose not to re-send automatically in that case:
-after an unknown delay, whether to try again is the user's decision.
+after an unknown delay, whether to try again is the user's decision. The whole
+sequence, from the click to the refetch, is drawn step by step in
+[`docs/diagrams/04-confirm-execute-reconcile.png`](docs/diagrams/04-confirm-execute-reconcile.png).
 
 **Two rules I added.**
 
@@ -358,6 +314,8 @@ showing asterisks and then flipping, and an unfinished link shows its label
 only. The stored text is never changed.
 
 ## The server is the source of truth
+
+![Who owns what: the server decides money, time, validity, order and outcome; the client holds a transcript, a registry, a cache and a pointer; the client never computes money, reads the browser clock, builds HTML or confirms from anywhere but the card](docs/diagrams/05-ownership.png)
 
 - **No invented numbers.** `core/format.ts` formats (`tr-TR` lira, dates); it
   never adds, subtracts or compares money. The cart shows the server's
@@ -523,8 +481,6 @@ an answer streams, and the phone layout with its sheets. Rows with ledger assert
 `scripts/check-ledger.mjs <id>` and requiring exit code 0: the same script,
 and so the same assertions, the reviewers run. Elements are found by role and
 accessible name, which makes the suite a check on the accessibility tree too.
-The redesign described above changed two text expectations and nothing else
-in the suite.
 
 ## Bonus work
 
@@ -536,7 +492,8 @@ in the suite.
   execute responses in the conversation, so the result of a used token is
   taken from the status response and placed after its turn. A prompt whose
   status cannot be fetched is not usable. A turn the server marks
-  `complete: false` comes back as incomplete.
+  `complete: false` comes back as incomplete. The sequence is drawn in
+  [`docs/diagrams/06-resume.png`](docs/diagrams/06-resume.png).
 - **Help center** (`/help`). 2,116 documents, of which 1,961 are support
   tickets and 10 are policy. `core/kb/classifyDoc.ts` gives every document two
   labels: *authority* (policy › guidance › support conversation) and
@@ -557,8 +514,7 @@ in the suite.
   happens, and the technical name small on the side, so that someone outside
   engineering can read it. A separate Vite entry: no router needed, and not in
   the production bundle. Nothing in it is hand-written markup. It is where the
-  four states are checked side by side, and it caught the checkout card
-  collapsing in a narrow column.
+  four states are checked side by side.
 - **Performance note**: below.
 
 ### Performance note
@@ -622,10 +578,10 @@ a number the server did not send or opens a second path to spending money.
   from a menu whose request did not name the restaurant (the `menu_item`
   block has no restaurant; "+ Order 1" takes the name from the user's "Show
   the X menu" and is disabled otherwise).
-- **A live prototype first.** The redesign was built as a separate Vite entry
-  on the real store and the real mock before touching the application, which
-  is how the six points above were found. It was deleted once the design
-  moved in; the mock-ups are in `docs/design/`.
+- The brand sheet and the mock-up the interface was built from are in
+  [`docs/design/`](docs/design/), with the benchmark of food-delivery apps
+  they draw on. The mock-up shows three of the six items above before they
+  were cut.
 
 ## What the contract is missing
 
@@ -692,26 +648,20 @@ backend and, where it is a matter of what the model emits, with its prompt.
 
 ## How I worked
 
-I used Claude Code throughout. What I think matters is not that, but the
-shape of the collaboration, because it decides whether the result is
-something I can defend line by line.
+I used Claude Code throughout, in a shape that keeps every line defensible:
 
 - **Decisions before code.** The architecture, the libraries and their
-  defaults, the bonus scope and the design direction were each argued out
-  and written down with the alternatives that lost
-  ([`docs/architecture-plan.md`](docs/architecture-plan.md)) before anything
-  was implemented. Several first proposals were rejected and redone — the
-  first redesign, for one, changed colours and little else.
+  defaults, the bonus scope and the design direction were each decided and
+  written down with the alternative that lost
+  ([`docs/architecture-decisions.md`](docs/architecture-decisions.md)) before
+  they were implemented.
 - **Rules the machine enforces, not rules in a prompt.** `core/` cannot import
   React (lint); nothing may read the browser clock (lint); the Zod schemas
   must agree with the JSON schema (test); the scenario rows must pass the
   reviewers' own ledger script (e2e). [`AGENTS.md`](AGENTS.md) states the
   rules for any tool; the checks make them stick.
 - **Every step closed with evidence**: unit tests, a run against the live
-  mock, screenshots, the ledger, a bundle measurement. The checks caught the
-  tool's mistakes twice — a race between a debounced search and a category
-  filter in the help center, and underscores stripped out of order ids in the
-  screen-reader announcement — before I did.
+  mock, screenshots, the ledger, a bundle measurement.
 - **Repeatable procedures as skills** (`.claude/skills/`): playing one
   scenario row and checking its ledger, the fixed sequence for changing the
   catalog, the full pre-handover check.

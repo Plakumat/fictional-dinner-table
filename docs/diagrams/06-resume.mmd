@@ -1,0 +1,30 @@
+%% Resuming after a reload. The browser keeps a pointer, not state; the server
+%% is asked for the conversation and for the state of every prompt in it.
+sequenceDiagram
+    autonumber
+    participant B as Browser
+    participant S as chatStore
+    participant X as Mock server
+    participant P as parseDocument<br/>(core)
+    participant M as machine.ts<br/>(core)
+
+    B->>S: restore({ user_id, conversation_id }) from localStorage
+    S->>X: GET /api/conversations/:id
+    X-->>S: turns, each with blocks + audit + complete
+    loop every turn
+        S->>P: parseDocument(turn)
+        P-->>S: valid · unknown · invalid blocks
+        Note over S: complete: false → shown as incomplete
+    end
+    loop every confirmation_prompt
+        S->>X: GET /api/actions/status?confirm_token=…
+        alt reachable
+            X-->>S: live · used (+ original result) · expired · superseded · void
+            S->>M: restorePrompt(prompt, serverState)
+            Note over S,M: used → confirmed, the result placed after its turn<br/>live → confirmable again, on the server's clock
+        else unreachable
+            S->>M: restorePrompt(prompt, null) → void (unverified)
+            Note over S,M: Not usable. The browser's memory of a prompt is not evidence.
+        end
+    end
+    S-->>B: the transcript, the cards and their real states

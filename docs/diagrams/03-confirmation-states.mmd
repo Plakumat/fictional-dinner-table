@@ -1,0 +1,40 @@
+%% The lifecycle of one confirmation_prompt, as core/confirmation/machine.ts
+%% implements it. One registry keyed by confirm token; every arrow is a pure
+%% function of (registry, event). Taking the lock is the transition out of live.
+%%{init: {"layout": "dagre", "themeVariables": {"fontSize": "17px"}}}%%
+stateDiagram-v2
+    direction LR
+
+    [*] --> live: prompt valid, its answer finished
+    [*] --> void: its answer was cut, failed or stopped
+
+    live --> confirming: confirm() takes the lock, synchronously
+    live --> expired: deadline on the server clock
+    live --> superseded: newer prompt, same action
+    live --> void: user switched, new conversation
+
+    confirming --> confirmed: 200
+    confirming --> expired: 410
+    confirming --> superseded: 409 token_superseded
+    confirming --> rejected: 403, 409, 422
+    confirming --> reconciling: no response
+
+    reconciling --> confirmed: status used
+    reconciling --> live: status live, nothing ran
+    reconciling --> expired: status expired
+    reconciling --> superseded: status superseded
+    reconciling --> rejected: status void, invalid
+    reconciling --> unresolved: status unreachable
+
+    unresolved --> reconciling: Check again
+
+    note left of unresolved
+        Unknown outcome. The card offers
+        "Check again", never a second Confirm.
+    end note
+
+    note right of live
+        Not a state of the machine but a rule of the store:
+        while any answer is still streaming, no prompt can be
+        confirmed. The server may already have replaced the token.
+    end note
