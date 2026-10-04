@@ -450,6 +450,24 @@ describe('confirmation lifecycle', () => {
   });
 });
 
+describe('new conversation', () => {
+  it('clears the screen, voids live prompts and lets the next message open a new conversation', async () => {
+    const ctx = setup();
+    await receivePrompt(ctx, 'Order 2 cheeseburgers from Burger Stop', promptBlock('ct_1.sig'));
+    expect(ctx.state().conversationId).toBe('cv_1');
+
+    ctx.store.getState().newConversation();
+    ctx.store.getState().confirm('ct_1.sig');
+    ctx.store.getState().send('What is in my cart?');
+    await settled();
+
+    expect(ctx.state().items).toHaveLength(1);
+    expect(ctx.state().confirmations['ct_1.sig']!.status).toEqual({ kind: 'void', reason: 'conversation_reset' });
+    expect(ctx.executes).toHaveLength(0);
+    expect(ctx.chats[1]!.request.conversationId).toBeNull();
+  });
+});
+
 describe('resuming after a reload', () => {
   const doc = (blocks: object[], decision = 'answered') => ({ version: '1', blocks, audit: { decision, reason: 'test' } });
   const stored = (turns: object[]): StoredConversation => ({ kind: 'found', userId: 'u_ok', turns: turns as never });
