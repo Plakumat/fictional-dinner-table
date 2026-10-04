@@ -1,9 +1,15 @@
 /* ---- the frame: rail | main | panel ---- */
 
 .app {
+  /* The frame is the containing block of everything positioned inside it,
+     and it clips: the screen-reader-only elements inside the scrolling
+     regions (position: absolute) are measured against this box, not the
+     document, so a long transcript cannot give the page itself a scrollbar. */
+  position: relative;
   display: grid;
   grid-template-columns: 264px minmax(0, 1fr) 340px;
   height: 100%;
+  overflow: hidden;
 }
 
 .app[data-panel='false'] {
@@ -20,6 +26,7 @@
 /* ---- left rail ---- */
 
 .side {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -175,6 +182,7 @@
 /* ---- right panel ---- */
 
 .panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 18px;

@@ -86,6 +86,31 @@ for (const width of [1280, 1440]) {
   });
 }
 
+test('a long conversation never gives the page itself a scrollbar', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/?user=u_ok');
+  await expect(page.getByRole('complementary', { name: 'Account' }).getByText(/^₺/)).toBeVisible();
+
+  // Enough turns to be several screens tall inside the transcript.
+  for (const message of [
+    'What is in my cart?',
+    'Is there a pizza place near me?',
+    'What is in my cart?',
+    'Is there a pizza place near me?',
+    'What is in my cart?',
+  ]) {
+    await say(page, message);
+  }
+
+  // The transcript scrolls; the document does not. Nothing inside the frame
+  // (screen-reader-only text included) may stretch the page below the frame.
+  await expectFillsTheViewportExactly(page);
+  await expectNoHorizontalOverflow(page);
+  await page.evaluate(() => window.scrollTo(0, 100_000));
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(composer(page)).toBeInViewport();
+});
+
 test('nothing already on screen moves while an answer streams in', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.addInitScript(() => {
