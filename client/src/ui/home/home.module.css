@@ -100,6 +100,70 @@
   gap: 8px;
 }
 
+/* ---- the phone start screen: one line of chips, three short rows ---- */
+
+.chipRow {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.chipRow::-webkit-scrollbar {
+  display: none;
+}
+
+.chipRow > li {
+  flex: none;
+}
+
+.compactList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.compactRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+}
+
+.compactRow:hover {
+  background: var(--linen);
+}
+
+.compactThumb {
+  flex: none;
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.compactText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.compactText strong {
+  font-size: 14.5px;
+}
+
 @media (max-width: 1023px) {
   .home {
     gap: 20px;

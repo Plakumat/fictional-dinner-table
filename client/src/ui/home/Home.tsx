@@ -3,9 +3,10 @@ import { useChat, useChatStore } from '../../app/AppContext';
 import { formatTry } from '../../core/format';
 import { RestaurantCard } from '../blocks/DataBlocks';
 import { Carousel } from '../Carousel';
-import { CATEGORIES, Food } from '../food/icons';
+import { CATEGORIES, cuisineLook, Food } from '../food/icons';
 import { Icon } from '../Icon';
 import { LoadingNote, RestaurantCardSkeleton, Skeleton } from '../Skeleton';
+import { COMPACT, useMediaQuery } from '../useMediaQuery';
 import styles from './home.module.css';
 
 /**
@@ -24,6 +25,79 @@ export function Home() {
   const last = orders.data?.[0];
   const firstName = profile.data?.display_name.split(' ')[0];
   const send = (text: string) => store.getState().send(text);
+  const compact = useMediaQuery(COMPACT);
+
+  // On a phone the start screen must leave room for the conversation: one
+  // line of category chips, three restaurants as short rows, nothing else.
+  if (compact) {
+    return (
+      <div className={styles.home}>
+        <div className={styles.hero}>
+          <h1>What are you craving{firstName ? `, ${firstName}` : ''}?</h1>
+          <p className="muted">Ask in your own words, or start from a category.</p>
+        </div>
+
+        <ul className={styles.chipRow} aria-label="Categories">
+          {CATEGORIES.map((category) => (
+            <li key={category.label}>
+              <button type="button" className="chip-button" onClick={() => send(category.message)}>
+                <Food icon={category.icon} size={16} color="var(--accent)" /> {category.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <section aria-label="Restaurants" aria-busy={!restaurants.data && !restaurants.isError}>
+          <h2 className={styles.heading}>Near you{profile.data?.district ? ` in ${profile.data.district}` : ''}</h2>
+          {restaurants.data ? (
+            <ul className={styles.compactList}>
+              {restaurants.data.slice(0, 3).map((restaurant) => {
+                const look = cuisineLook(restaurant.cuisine);
+                return (
+                  <li key={restaurant.id}>
+                    <button type="button" className={styles.compactRow} onClick={() => send(`Show the ${restaurant.name} menu`)}>
+                      <span className={styles.compactThumb} style={{ background: look.tint }} aria-hidden="true">
+                        <Food icon={look.icon} color={look.ink} size={20} />
+                      </span>
+                      <span className={styles.compactText}>
+                        <strong>{restaurant.name}</strong>
+                        <span className="muted">
+                          {[
+                            restaurant.rating !== undefined && `★ ${restaurant.rating}`,
+                            restaurant.eta_min !== undefined && `${restaurant.eta_min} min`,
+                            restaurant.delivery_fee_try !== undefined && `Delivery ${formatTry(restaurant.delivery_fee_try)}`,
+                          ]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </span>
+                      </span>
+                      <Icon name="right" size={16} />
+                    </button>
+                  </li>
+                );
+              })}
+              <li>
+                <button type="button" className="chip-button" onClick={() => send('Which restaurants are near me?')}>
+                  All restaurants near me
+                </button>
+              </li>
+            </ul>
+          ) : restaurants.isError ? (
+            <p className={styles.message}>
+              <Icon name="alert" size={15} /> Could not load restaurants.
+            </p>
+          ) : (
+            <div className={styles.compactList} aria-hidden="true">
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} height={56} radius={14} />
+              ))}
+              <LoadingNote what="restaurants" />
+            </div>
+          )}
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.home}>
