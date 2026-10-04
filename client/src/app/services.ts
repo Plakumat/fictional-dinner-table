@@ -52,6 +52,11 @@ export const chatStore = createChatStore({
 // they are also printed once per response, next to the audit inspector.
 const reported = new Set<string>();
 chatStore.subscribe((state) => {
+  // Forget responses that left the transcript (user switch, new conversation).
+  if (reported.size > state.items.length) {
+    const present = new Set(state.items.map((item) => item.id));
+    for (const id of reported) if (!present.has(id)) reported.delete(id);
+  }
   for (const item of state.items) {
     const { phase, issues } = item.response;
     if (issues.length === 0 || phase.kind === 'connecting' || phase.kind === 'streaming' || reported.has(item.id)) continue;

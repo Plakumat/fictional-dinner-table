@@ -68,6 +68,7 @@ export function HelpSearch() {
 
   return (
     <main className={styles.page}>
+      <title>Help center · Sofra</title>
       <h2 className={styles.heading}>Help center</h2>
 
       <form className={styles.controls} role="search" onSubmit={(event) => (event.preventDefault(), update({ q: draft, page: 1 }))}>
@@ -186,7 +187,12 @@ export function HelpDoc() {
           </button>
         </div>
       )}
-      {doc.data && <DocView doc={doc.data} />}
+      {doc.data && (
+        <>
+          <title>{`${doc.data.title} · Help center · Sofra`}</title>
+          <DocView doc={doc.data} />
+        </>
+      )}
     </main>
   );
 }

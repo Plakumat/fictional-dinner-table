@@ -115,7 +115,8 @@
 .select {
   width: 100%;
   min-height: 36px;
-  padding: 4px 8px;
+  /* Room on the right for the native arrow, so it does not sit on the edge. */
+  padding: 4px 32px 4px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);

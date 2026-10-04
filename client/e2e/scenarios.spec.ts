@@ -117,10 +117,11 @@ test.describe('the right thing renders', () => {
     await say(page, 'What is the calorie value of the Köfte?');
     await expect(lastTurn(page)).toContainText("The assistant doesn't know this, and did not guess.");
 
-    await page.getByRole('button', { name: 'Inspector' }).click();
+    await page.getByRole('button', { name: 'Audit inspector' }).click();
     const inspector = page.getByRole('complementary', { name: 'Audit inspector' });
-    await expect(inspector).toContainText('unknown');
-    await expect(inspector).toContainText('answered');
+    // The decision field of each entry, newest first.
+    await expect(inspector).toContainText('decisionunknown');
+    await expect(inspector).toContainText('decisionanswered');
   });
 
   test('sc_19 an unknown block is skipped and the rest renders', async ({ page }) => {
@@ -133,7 +134,7 @@ test.describe('the right thing renders', () => {
     await expect(turn).toContainText('It delivers to Kadıköy, Ataşehir, Üsküdar.');
     await expect(turn).not.toContainText('map_view');
 
-    await page.getByRole('button', { name: 'Inspector' }).click();
+    await page.getByRole('button', { name: 'Audit inspector' }).click();
     await expect(page.getByRole('complementary', { name: 'Audit inspector' })).toContainText('Unknown block type "map_view" skipped');
   });
 });
@@ -312,6 +313,9 @@ test.describe('the client survives the server', () => {
     await expect(menu.getByRole('note')).toHaveText('One item in this answer could not be displayed.');
     await expect(menu.locator('[data-unavailable]')).toHaveCount(3);
     await expect(menu).not.toContainText(/NaN|undefined|TL TL/);
+    await page.getByRole('button', { name: 'Audit inspector' }).click();
+    await expect(page.getByRole('complementary', { name: 'Audit inspector' })).toContainText('Invalid menu_item not rendered');
+    await page.getByRole('button', { name: 'Close' }).click();
 
     await say(page, '/chaos malformed_confirmation Order 2 cheeseburgers from Burger Stop');
     await expect(lastTurn(page).getByRole('note')).toContainText('could not be verified');
@@ -384,14 +388,15 @@ test.describe('the client survives the server', () => {
 
   test('sc_22 a new message mid-stream aborts the first stream', async ({ page }) => {
     await open(page);
-    await composer(page).fill('/chaos slow What is in my cart?');
+    // The longest answer the mock has, slowed down: a wide window for the second message.
+    await composer(page).fill('/chaos slow Show my recent orders');
     await composer(page).press('Enter');
     await expect(stopButton(page)).toBeEnabled();
-    await say(page, 'Show my recent orders');
+    await say(page, 'What is in my cart?');
 
     await expect(turns(page).first()).toContainText('Stopped because you sent a new message.');
-    await expect(lastTurn(page)).toContainText('Here are your 11 most recent orders.');
-    await expect(lastTurn(page)).not.toContainText('away from free delivery');
+    await expect(lastTurn(page)).toContainText('away from free delivery');
+    await expect(lastTurn(page)).not.toContainText('most recent orders');
   });
 });
 
