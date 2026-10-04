@@ -1,0 +1,112 @@
+.inspector {
+  position: fixed;
+  inset: 57px 0 0 auto;
+  z-index: 5;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  width: min(440px, 100vw);
+  padding: 14px 16px 24px;
+  overflow-y: auto;
+  border-left: 1.5px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: -8px 0 24px rgb(27 26 23 / 12%);
+  font-size: 13px;
+}
+
+.inspector[hidden] {
+  display: none;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.heading {
+  font-size: 15px;
+}
+
+.sub {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.meta {
+  color: var(--ink-muted);
+}
+
+.entries {
+  display: grid;
+  gap: 10px;
+}
+
+.entry {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.entryTitle {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.fields {
+  display: grid;
+  gap: 2px;
+}
+
+.fields > div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.fields dt {
+  color: var(--ink-muted);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.fields dd {
+  overflow-wrap: anywhere;
+}
+
+.issues {
+  padding: 6px 8px;
+  border-left: 4px solid var(--danger);
+  background: var(--surface-sunken);
+}
+
+.issuesTitle {
+  font-weight: 700;
+}
+
+.issueKind {
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.details {
+  padding-left: 14px;
+  list-style: disc;
+}
+
+.raw {
+  margin: 4px 0 0;
+  padding: 8px;
+  overflow-x: auto;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.tokens {
+  display: grid;
+  gap: 2px;
+}

@@ -1,0 +1,122 @@
+.citations {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 13px;
+}
+
+.citationsLabel {
+  color: var(--ink-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.citationList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.citation {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.citation:hover {
+  background: var(--surface-sunken);
+}
+
+.primary {
+  color: var(--ink-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-height: min(80vh, 720px);
+  padding: 16px 20px 20px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.dialog::backdrop {
+  background: rgb(27 26 23 / 45%);
+}
+
+.dialogBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.doc {
+  display: grid;
+  gap: 8px;
+}
+
+.docTitle {
+  font-size: 18px;
+}
+
+.docBody {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.trust {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.label[data-kind='official'] {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.label[data-kind='conversation'],
+.label[data-kind='undated'] {
+  border-style: dashed;
+}
+
+.label[data-kind='archived'] {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.more {
+  margin-top: 12px;
+  font-size: 13.5px;
+}
+
+.more a {
+  color: var(--focus);
+}
