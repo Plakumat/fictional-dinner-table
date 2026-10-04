@@ -1,0 +1,588 @@
+/* The four states that must never be confused are told apart by three things
+   at once, none of which is colour: the border, the icon and the first words.
+
+   gate      thick solid border + hatched band      "Blocked · nothing was executed"
+   checkout  dashed border + tinted title bar       "Needs your confirmation"
+   order     thin solid border + status pill        "Received" / "Delivered" / "Cancelled"
+   error     heavy left bar                         "Error"                                   */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--ink-muted);
+  font-size: 12.5px;
+}
+
+.meta b {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.price {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.qty {
+  display: inline-block;
+  min-width: 26px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--linen);
+  font-size: 12.5px;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ---- text ---- */
+
+.markdown {
+  overflow-wrap: anywhere;
+}
+
+.markdown > * + * {
+  margin-top: 8px;
+}
+
+.markdown blockquote {
+  padding-left: 10px;
+  border-left: 3px solid var(--line);
+  color: var(--ink-muted);
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 20px;
+  list-style: revert;
+}
+
+.markdown code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+.markdown a {
+  color: var(--sky-ink);
+  text-decoration: underline;
+}
+
+.externalMark {
+  display: inline-flex;
+  margin-left: 2px;
+  vertical-align: -2px;
+}
+
+/* A link or an image the client refused to make live. */
+.inert {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+/* ---- restaurant ---- */
+
+.restaurant {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.cover {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.restaurantBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px 14px;
+}
+
+.restaurantTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.rating {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-gutter: stable;
+}
+
+.carousel > li {
+  flex: 0 0 272px;
+  display: flex;
+}
+
+/* ---- menu ---- */
+
+.menu {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.menuTabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 4px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.menuGroup {
+  margin: 10px 16px 4px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.item[data-unavailable='true'] {
+  color: var(--ink-muted);
+}
+
+.item[data-unavailable='true'] .itemName,
+.item[data-unavailable='true'] .price {
+  text-decoration: line-through;
+}
+
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  font-weight: 800;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge,
+.badgeDashed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.badgeDashed {
+  border-style: dashed;
+  border-color: var(--ink-muted);
+}
+
+/* ---- cart ---- */
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals .line {
+  color: var(--ink-muted);
+}
+
+.totals .total {
+  margin-top: 2px;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.free {
+  color: var(--olive-ink);
+  font-weight: 800;
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+  font-weight: 700;
+}
+
+.warning svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+/* ---- order ---- */
+
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.orderHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px 2px 6px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pill[data-status='delivered'] {
+  border-color: var(--olive);
+  background: var(--olive);
+  color: #fff;
+}
+
+.pill[data-status='cancelled'] {
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.tracker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.dotOpen {
+  border: 2px solid var(--ink);
+  background: var(--surface);
+}
+
+.track {
+  flex: 1;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 10px);
+}
+
+.trackLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.eta {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.note {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--linen);
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.noteLabel {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---- verification gate: blocked ---- */
+
+.gate {
+  position: relative;
+  padding: 16px 18px 16px 32px;
+  border: 2px solid var(--line-strong);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.gate::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  border-radius: 14px 0 0 14px;
+  background: repeating-linear-gradient(135deg, var(--line-strong) 0 4px, var(--surface) 4px 8px);
+}
+
+.gate .title {
+  margin-top: 4px;
+  font-size: 17px;
+}
+
+.next {
+  margin-top: 8px;
+  font-size: 13.5px;
+}
+
+/* ---- confirmation: the checkout card ---- */
+
+.checkout {
+  /* The card lays itself out by its own width, not the window's: it must hold
+     together in a narrow column (the workbench, a small screen) as well as the transcript. */
+  container-type: inline-size;
+  border: 2px dashed var(--line-strong);
+  border-radius: 20px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+/* Once it can no longer be confirmed it stops looking like a question. */
+.checkout[data-inert='true'] {
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.checkoutBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+}
+
+.checkout[data-inert='true'] .checkoutBar {
+  background: var(--linen);
+  color: var(--ink);
+}
+
+.checkout[data-destructive='true']:not([data-inert='true']) .checkoutBar {
+  background: var(--accent);
+  color: #fff;
+}
+
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+.checkoutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+.checkoutLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border-right: 1px dashed var(--line);
+}
+
+.checkoutLeft h3 {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.summary {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.checkoutRight {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  /* The control and the status swap places as the state changes. A floor on
+     the height keeps everything below from moving when they do. */
+  min-height: 150px;
+}
+
+.checkoutRight .totals {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.cta {
+  min-height: 50px;
+  margin-top: auto;
+  font-size: 16px;
+}
+
+.checkoutStatus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@container (max-width: 640px) {
+  .checkoutGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .checkoutLeft {
+    border-right: 0;
+    border-bottom: 1px dashed var(--line);
+  }
+}
+
+/* ---- error ---- */
+
+.error {
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-left: 8px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+/* ---- suggested actions ---- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---- a block that could not be shown ---- */
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px dotted var(--ink-muted);
+  border-radius: var(--radius-sm);
+  color: var(--ink-muted);
+  font-size: 13.5px;
+}
+
+.notice svg {
+  flex: none;
+  margin-top: 2px;
+}

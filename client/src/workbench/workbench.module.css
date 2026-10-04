@@ -1,0 +1,36 @@
+.page {
+  display: grid;
+  gap: 14px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page h2 {
+  margin-top: 18px;
+  font-size: 18px;
+}
+
+.four {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.sample {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.label {
+  font-size: 12.5px;
+}

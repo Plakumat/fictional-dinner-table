@@ -1,0 +1,195 @@
+.chat {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg);
+}
+
+.scroll {
+  overflow-y: auto;
+  /* The scrollbar's space is always reserved: it appearing mid-stream would shift every line. */
+  scrollbar-gutter: stable;
+}
+
+.transcript {
+  padding: 28px 40px 8px;
+}
+
+.empty {
+  max-width: 880px;
+  margin: 10vh auto 0;
+}
+
+.turns {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user {
+  align-self: flex-end;
+  max-width: 72%;
+  padding: 10px 16px;
+  border-radius: 18px 18px 6px 18px;
+  background: var(--ink);
+  color: #fff;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.answer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.avatar {
+  flex: none;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent-tint);
+  align-items: center;
+  justify-content: center;
+}
+
+.assistant {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* A response that did not finish never looks finished. */
+.assistant[data-unfinished='true'] {
+  padding-left: 12px;
+  border-left: 3px dashed var(--ink-muted);
+}
+
+.resultLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  /* Reserved for every response, so nothing moves when it settles. */
+  min-height: 36px;
+}
+
+.statusText {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.statusText svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+.status[data-open='true'] .statusText {
+  color: var(--ink-muted);
+  animation: breathe 1.4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.composerWrap {
+  padding: 10px 40px 14px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0%), var(--bg) 30%);
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8px 8px 8px 18px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgb(28 25 23 / 8%);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  max-height: 140px;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  field-sizing: content;
+}
+
+.iconButton {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.iconButton:disabled {
+  color: #a39c93;
+  cursor: not-allowed;
+}
+
+.send {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.send:disabled {
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.composerHint {
+  max-width: 960px;
+  margin: 8px auto 0;
+  padding-left: 18px;
+  color: var(--ink-muted);
+  font-size: 12.5px;
+}
