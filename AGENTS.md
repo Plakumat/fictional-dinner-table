@@ -2,7 +2,7 @@
 
 Instructions for any coding agent (and any person) changing this code. They
 are short on purpose; the reasons behind them are in `README.md` and
-`docs/architecture-plan.md`.
+`docs/architecture-decisions.md`.
 
 ## What this is
 
@@ -49,7 +49,8 @@ client/src/
   fixtures/    block examples shared by tests and the workbench
   workbench/   separate Vite entry: every block in every state
 client/e2e/    the scenario table, asserted with scripts/check-ledger.mjs
-docs/          brief, plan, decisions, design, screenshots, checklist
+client/tools/  scripts that are not part of the build (diagram rendering)
+docs/          brief, decisions, diagrams, design, screenshots; docs/README.md is the index
 ```
 
 ## Checks
@@ -63,9 +64,11 @@ Run from `client/`:
 | `npm run e2e` | the 24 scenario rows in a real browser against the mock; about three minutes |
 | `npm run build` | also reports bundle size for the README |
 | `npm run capture` | regenerates `docs/screenshots/` |
+| `npm run diagrams` | re-renders `docs/diagrams/*.mmd` to PNG |
 
-A change is done when all five pass and, where behaviour changed, a test was
-added or changed with it.
+A change is done when the first four pass and, where behaviour changed, a
+test was added or changed with it. A change to the architecture also updates
+the diagram that shows it.
 
 ## Commits and pushes
 
@@ -86,5 +89,6 @@ added or changed with it.
 
 ## Language
 
-Code, comments, UI text and `README.md` are in English. Working notes in
-`docs/` may be in Turkish.
+Code, comments, UI text and every document in the repository are in English.
+Documents describe what is built and why; they do not narrate how the work
+was done.

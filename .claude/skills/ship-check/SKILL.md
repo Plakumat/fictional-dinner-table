@@ -15,11 +15,12 @@ not continue to the next step with a red one behind you.
    about three minutes. Note the count. Every row that has ledger assertions
    ends in `check-ledger` exit code 0.
 5. `npm run build` — note the main chunk's size (min and gzip).
-6. `npm run capture` — regenerates `docs/screenshots/`. Open two of them
-   (`row-04-prompt.png`, `workbench.png`) and look: four states told apart by
-   shape and words, no overlap, nothing clipped.
+6. `npm run capture` — regenerates `docs/screenshots/`. Open three of them
+   (`row-04-prompt.png`, `phone-checkout.png`, `workbench.png`) and look: four
+   states told apart by shape and words, no overlap, nothing clipped.
 7. Update `README.md` where numbers are quoted: test counts in "Tests",
-   bundle sizes in "Performance note". Update `docs/checklist.md`.
+   bundle sizes in "Performance note". If the architecture changed, update the
+   diagram in `docs/diagrams/` and run `npm run diagrams`.
 8. In the root: `git status`. Confirm that `mock-server/`, `data/`, `schema/`,
    `scripts/`, `scenarios.jsonl` and the root `package.json` are unchanged.
 9. Report the counts and sizes in one short table, and anything that changed
