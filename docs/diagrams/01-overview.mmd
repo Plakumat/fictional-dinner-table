@@ -1,0 +1,43 @@
+%% The whole client on one page. Rendered by `npm run diagrams` in client/.
+flowchart TB
+    subgraph server["Mock server · given, unmodified"]
+        direction LR
+        chat["POST /api/chat<br/>NDJSON stream"]
+        exec["POST /api/actions/execute<br/>GET /api/actions/status"]
+        rest["GET users · cart · orders · restaurants · kb"]
+    end
+
+    subgraph core["client/src/core · pure TypeScript, no React, no network"]
+        direction LR
+        stream["stream/<br/>bytes → lines → events → one response"]
+        contract["contract/<br/>parseBlock: valid · unknown · invalid"]
+        machine["confirmation/<br/>the state machine, keyed by token"]
+        clock["clock/<br/>server time from X-Sofra-Now"]
+        markdown["markdown/<br/>link allowlist · steady half-received text"]
+    end
+
+    store["state/chatStore<br/>transcript + confirmation registry<br/>the only asynchronous orchestration"]
+    query["TanStack Query<br/>cached server state<br/>invalidated after every action"]
+    pointer[("localStorage<br/>user_id · conversation_id · nothing else")]
+    ui["ui/<br/>React · draws valid blocks only"]
+
+    chat --> stream --> contract --> store
+    exec --> contract
+    machine --> store
+    clock --> store
+    rest --> query
+    store --> ui
+    markdown --> ui
+    query --> ui
+    store -.-> pointer
+
+    classDef given fill:#faf8f4,stroke:#5c5752,stroke-dasharray:4 3,color:#1c1917
+    classDef pure fill:#ffffff,stroke:#b42318,stroke-width:2px,color:#1c1917
+    classDef glue fill:#1c1917,stroke:#1c1917,color:#ffffff
+    classDef draw fill:#f5f1ea,stroke:#1c1917,color:#1c1917
+    classDef cache fill:#e8efe3,stroke:#3f6b3a,color:#1c1917
+    class chat,exec,rest given
+    class stream,contract,machine,clock,markdown pure
+    class store glue
+    class ui draw
+    class query,pointer cache

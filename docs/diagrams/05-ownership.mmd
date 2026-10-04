@@ -1,0 +1,37 @@
+%% Who owns what. The server decides; the client holds, formats and draws.
+%%{init: {"layout": "dagre"}}%%
+flowchart LR
+    subgraph server["The server decides"]
+        direction TB
+        s1["Money: subtotal, fee, total, wallet, meets_minimum"]
+        s2["Time: X-Sofra-Now on every response · expires_at"]
+        s3["Validity: which token is live, used, expired, superseded"]
+        s4["Order: restaurants, orders, search results stay in the server's order"]
+        s5["Outcome: an execute result or a refusal, as a document"]
+    end
+
+    subgraph client["The client holds"]
+        direction TB
+        c1["chatStore<br/>transcript · confirmation registry · validation issues"]
+        c2["TanStack Query<br/>wallet · cart · orders · restaurants · documents<br/>invalidated after every action, refetched"]
+        c3["serverClock<br/>offset between X-Sofra-Now and performance.now()<br/>latest sample wins, even backwards"]
+        c4[("localStorage<br/>user_id · conversation_id")]
+    end
+
+    never["<b>The client never</b><br/>· adds, subtracts or compares money<br/>· reads Date.now() or new Date() — a lint error<br/>· builds HTML from a string — every field is a text node<br/>· confirms from anywhere but the card's own button<br/>· updates a number optimistically"]
+
+    s1 --> c2
+    s2 --> c3
+    s3 --> c1
+    s4 --> c2
+    s5 --> c1
+    c1 -.-> c4
+    %% An invisible link only places the third column.
+    client ~~~ never
+
+    classDef given fill:#faf8f4,stroke:#5c5752,stroke-dasharray:4 3,color:#1c1917
+    classDef hold fill:#ffffff,stroke:#1c1917,color:#1c1917
+    classDef no fill:#fbe4e1,stroke:#b42318,stroke-width:2px,color:#1c1917
+    class s1,s2,s3,s4,s5 given
+    class c1,c2,c3,c4 hold
+    class never no

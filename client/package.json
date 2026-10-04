@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "capture": "CAPTURE=1 playwright test capture",
+    "diagrams": "node tools/render-diagrams.mjs",
     "prepare": "cd .. && husky client/.husky",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -60,6 +61,10 @@
       "prettier --write"
     ],
     "e2e/**/*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "tools/**/*.mjs": [
       "prettier --write",
       "eslint --fix"
     ]

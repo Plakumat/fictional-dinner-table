@@ -1,0 +1,27 @@
+%% The story of one order, in plain words. No file names: the map of the code is 01-overview.
+%%{init: {"themeVariables": {"fontSize": "15px"}}}%%
+flowchart TB
+    a["You type<br/><i>Order 2 cheeseburgers from Burger Stop</i>"]
+    b["The answer streams in, piece by piece<br/>split characters and split lines are put back together"]
+    c["Every block is checked before it is drawn"]
+    d["Cards appear<br/>the cart, and the checkout card with one button"]
+    e["You confirm on that button, and nowhere else<br/>Enter in the message box never confirms"]
+    f["Exactly one request goes out<br/>a second click, a triple click or key repeat sends nothing"]
+    g["The server answers"]
+    h["Wallet, cart and orders are fetched again<br/>nothing is computed on this side"]
+
+    c2["A block the client does not know: drawn as nothing<br/>A broken block: a notice, never its data"]
+    e2["Expiry runs on the server's clock<br/>A newer prompt replaces the older one"]
+    g2["Done, or refused with the server's words<br/>No answer at all: ask the server what happened, never confirm again"]
+
+    a --> b --> c --> d --> e --> f --> g --> h
+    c -.- c2
+    e -.- e2
+    g -.- g2
+
+    classDef step fill:#ffffff,stroke:#1c1917,color:#1c1917
+    classDef money fill:#b42318,stroke:#b42318,color:#ffffff
+    classDef aside fill:#f5f1ea,stroke:#e6e0d6,color:#5c5752
+    class a,b,c,d,g,h step
+    class e,f money
+    class c2,e2,g2 aside

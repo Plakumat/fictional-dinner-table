@@ -95,3 +95,14 @@ test('other states', async ({ page }) => {
   await page.waitForTimeout(500);
   await shot(page, 'workbench');
 });
+
+test('on a phone', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await fetch(`${MOCK}/__admin/reset`, { method: 'POST' });
+  await page.goto('/?user=u_ok');
+  await expect(page.getByRole('heading', { name: /Near you in/ })).toBeVisible();
+  await shot(page, 'phone-home');
+  await say(page, 'Order 2 cheeseburgers from Burger Stop');
+  await page.getByRole('button', { name: 'Place order' }).scrollIntoViewIfNeeded();
+  await shot(page, 'phone-checkout');
+});

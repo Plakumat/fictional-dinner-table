@@ -1,0 +1,41 @@
+%% One pipeline for every server document: a streamed answer, an execute
+%% response and a restored conversation all end in the same parseBlock, the
+%% same store and the same renderer.
+flowchart TB
+    subgraph arrive["Three ways a document arrives"]
+        direction LR
+        chat["POST /api/chat<br/>bytes, NDJSON"]
+        exec["POST /api/actions/execute<br/>GET /api/actions/status<br/>JSON: blocks + audit"]
+        conv["GET /api/conversations/:id<br/>JSON: the turns so far"]
+    end
+
+    ndjson["ndjson.ts<br/>TextDecoder in streaming mode + a line buffer<br/>a split character or a split line is read once"]
+    events["events.ts<br/>line → typed event<br/>unknown event names are skipped"]
+    reducer["response.ts · a pure reducer<br/>duplicate seq ignored · version ≠ 1 renders nothing<br/>complete only on done · else incomplete, failed or stopped<br/>events for a closed response are dropped"]
+    parse["parseBlock.ts · per block, strict Zod<br/>valid · unknown · invalid<br/>params kept by reference, then frozen"]
+    doc["parseDocument<br/>the same parseBlock, over a whole document"]
+    store["chatStore<br/>transcript · confirmation registry · validation issues"]
+
+    subgraph drawn["What gets drawn"]
+        direction LR
+        valid["valid → the block's component"]
+        unknown["unknown → nothing"]
+        invalid["invalid → a calm notice, no data"]
+    end
+
+    chat --> ndjson --> events --> reducer --> parse --> store
+    exec --> doc
+    conv --> doc
+    doc --> parse
+    store --> valid
+    store --> unknown
+    store --> invalid
+
+    classDef given fill:#faf8f4,stroke:#5c5752,stroke-dasharray:4 3,color:#1c1917
+    classDef pure fill:#ffffff,stroke:#b42318,stroke-width:2px,color:#1c1917
+    classDef glue fill:#1c1917,stroke:#1c1917,color:#ffffff
+    classDef draw fill:#f5f1ea,stroke:#1c1917,color:#1c1917
+    class chat,exec,conv given
+    class ndjson,events,reducer,parse,doc pure
+    class store glue
+    class valid,unknown,invalid draw
