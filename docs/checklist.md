@@ -19,11 +19,11 @@ Durum: 4 Ekim akşamı. A, B ve C tamamlandı; D ve E kullanıcıda.
 ## B. Doğrulama
 
 - [x] B1 Taşımadan önce tam uçtan uca paket (34 geçti).
-- [x] B2 Birim ve bileşen testleri: 148 geçti.
-- [x] B3 Uçtan uca testler: 34 geçti (iki metin beklentisi güncellendi).
+- [x] B2 Birim ve bileşen testleri: 168 geçti (makine, saat ve yeni konuşma testleri eklendi).
+- [x] B3 Uçtan uca testler: 36 geçti (iki genişlikte düzen testi eklendi).
 - [x] B4 Workbench güncel; dar sütunda bozulan ödeme fişi düzeltildi.
 - [x] B5 Ekran görüntüleri yeniden üretildi.
-- [x] B6 Son tam tur: tipler ve lint temiz, 148 birim, 34 uçtan uca test geçti; verilen dosyalar değişmedi.
+- [x] B6 Son tam tur: tipler ve lint temiz, 168 birim, 36 uçtan uca test geçti; verilen dosyalar değişmedi.
 
 ## C. Okunabilirlik, belgeler, yapay zekâ çalışma düzeni
 
